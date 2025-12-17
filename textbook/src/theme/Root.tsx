@@ -7,7 +7,7 @@ import NavbarLanguageSwitcher from '../components/NavbarLanguageSwitcher';
 import '../i18n/config'; // Initialize i18n
 
 // Swizzled Root component to add global ChatWidget and Auth with protected routes
-export default function Root({ children }: { children: React.NodeNode }) {
+export default function Root({ children }: { children: React.ReactNode }) {
     const location = useLocation();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [user, setUser] = useState<any>(null);
@@ -32,24 +32,30 @@ export default function Root({ children }: { children: React.NodeNode }) {
 
     const handleAuthSuccess = (userData: any) => {
         setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+        if (ExecutionEnvironment.canUseDOM) {
+            localStorage.setItem('user', JSON.stringify(userData));
+        }
         setShowAuthModal(false);
     };
 
     const handleLogout = () => {
         setUser(null);
-        localStorage.removeItem('user');
-        // Redirect to homepage on logout
-        window.location.href = '/physical-ai-robotics-textbook/';
+        if (ExecutionEnvironment.canUseDOM) {
+            localStorage.removeItem('user');
+            // Redirect to homepage on logout
+            window.location.href = '/physical-ai-textbook/';
+        }
     };
 
-    // Make auth functions available globally
+    // Make auth functions available globally - only in browser
     useEffect(() => {
-        (window as any).openAuth = (mode: 'signin' | 'signup' = 'signup') => {
-            setShowAuthModal(true);
-        };
-        (window as any).logout = handleLogout;
-        (window as any).currentUser = user;
+        if (ExecutionEnvironment.canUseDOM) {
+            (window as any).openAuth = (mode: 'signin' | 'signup' = 'signup') => {
+                setShowAuthModal(true);
+            };
+            (window as any).logout = handleLogout;
+            (window as any).currentUser = user;
+        }
     }, [user]);
 
     // If route requires auth and user is not authenticated, show auth overlay
