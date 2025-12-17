@@ -15,10 +15,14 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-username.github.io',
+  url: 'https://tahir-yamin.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/physical-ai-robotics-textbook/',
+  baseUrl: '/physical-ai-textbook/',
+
+  // GitHub pages deployment config
+  organizationName: 'Tahir-yamin', // GitHub username
+  projectName: 'physical-ai-textbook', // Repository name
 
   // Internationalization configuration for docs
   i18n: {

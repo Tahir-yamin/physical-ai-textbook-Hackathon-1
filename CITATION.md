@@ -9,14 +9,14 @@ If you use this Physical AI & Humanoid Robotics Textbook in your work, research,
   title={Physical AI \& Humanoid Robotics Textbook: An Interactive Learning Platform},
   author={Physical AI Textbook Contributors},
   year={2025},
-  url={https://github.com/yourusername/physical-ai-textbook},
+  url={https://github.com/Tahir-yamin/physical-ai-textbook},
   note={Interactive textbook with RAG chatbot for Physical AI and Humanoid Robotics}
 }
 ```
 
 ## APA Format
 
-Physical AI Textbook Contributors. (2025). *Physical AI & Humanoid Robotics Textbook: An Interactive Learning Platform*. Retrieved from https://github.com/yourusername/physical-ai-textbook
+Physical AI Textbook Contributors. (2025). *Physical AI & Humanoid Robotics Textbook: An Interactive Learning Platform*. Retrieved from https://github.com/Tahir-yamin/physical-ai-textbook
 
 ## MLA Format
 
@@ -24,7 +24,7 @@ Physical AI Textbook Contributors. "Physical AI & Humanoid Robotics Textbook: An
 
 ## Chicago Format
 
-Physical AI Textbook Contributors. "Physical AI & Humanoid Robotics Textbook: An Interactive Learning Platform." 2025. https://github.com/yourusername/physical-ai-textbook.
+Physical AI Textbook Contributors. "Physical AI & Humanoid Robotics Textbook: An Interactive Learning Platform." 2025. https://github.com/Tahir-yamin/physical-ai-textbook.
 
 ---
 
