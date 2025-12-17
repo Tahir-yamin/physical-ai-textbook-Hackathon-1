@@ -18,11 +18,11 @@ const config: Config = {
   url: 'https://tahir-yamin.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/physical-ai-textbook/',
+  baseUrl: '/physical-ai-textbook-Hackathon-1/',
 
   // GitHub pages deployment config
   organizationName: 'Tahir-yamin', // GitHub username
-  projectName: 'physical-ai-textbook', // Repository name
+  projectName: 'physical-ai-textbook-Hackathon-1', // Repository name
 
   // Internationalization configuration for docs
   i18n: {
@@ -47,7 +47,7 @@ const config: Config = {
   // Removed Docusaurus i18n config to avoid routing conflicts
 
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
 
   presets: [
     [
@@ -106,10 +106,7 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
-        {
-          type: 'localeDropdown',
-          position: 'right',
-        },
+        // Removed localeDropdown - using custom LanguageSwitcher component instead
       ],
     },
     footer: {

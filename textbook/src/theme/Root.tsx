@@ -34,6 +34,8 @@ export default function Root({ children }: { children: React.ReactNode }) {
         setUser(userData);
         if (ExecutionEnvironment.canUseDOM) {
             localStorage.setItem('user', JSON.stringify(userData));
+            // Dispatch custom event to trigger language selector injection
+            window.dispatchEvent(new Event('authStateChanged'));
         }
         setShowAuthModal(false);
     };
@@ -78,7 +80,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 <AuthModal
                     onClose={() => {
                         // Redirect to homepage when closing modal on protected route
-                        window.location.href = '/physical-ai-robotics-textbook/';
+                        window.location.href = '/physical-ai-textbook/';
                     }}
                     onAuthSuccess={handleAuthSuccess}
                     initialMode="signin"
@@ -124,7 +126,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 <AuthModal
                     onClose={() => setShowAuthModal(false)}
                     onAuthSuccess={handleAuthSuccess}
-                    initialMode="signup"
+                    initialMode="signin"
                 />
             )}
 

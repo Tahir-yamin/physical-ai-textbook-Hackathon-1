@@ -1,0 +1,140 @@
+---
+sidebar_position: 2
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function PythonAPIReference() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Python API حوالہ (Reference)</h1>
+        
+        <h2>rclpy.node.Node</h2>
+        
+        <p>ROS 2 نوڈ بنانے کے لیے بنیادی کلاس۔</p>
+        
+        <h3>create_publisher(msg_type, topic, qos_profile)</h3>
+        <p>ایک نیا پبلشر بناتا ہے۔</p>
+        <ul>
+          <li><code>msg_type</code>: پیغام کی کلاس (جیسے <code>String</code>)</li>
+          <li><code>topic</code>: ٹاپک کا نام (سٹرنگ)</li>
+          <li><code>qos_profile</code>: QoS پروفائل یا قطار کا سائز (int)</li>
+        </ul>
+        
+        <h3>create_subscription(msg_type, topic, callback, qos_profile)</h3>
+        <p>ایک نیا سبسکرائبر بناتا ہے۔</p>
+        <ul>
+          <li><code>callback</code>: پیغام موصول ہونے پر کال کرنے کے لیے فنکشن</li>
+        </ul>
+        
+        <h3>create_timer(timer_period_sec, callback)</h3>
+        <p>ایک ٹائمر بناتا ہے جو وقتاً فوقتاً کال بیک چلاتا ہے۔</p>
+        
+        <h3>get_logger()</h3>
+        <p>لاگنگ کے لیے نوڈ کا لاگر لوٹاتا ہے۔</p>
+        
+        <h2>rclpy.logging</h2>
+        
+        <pre>{`
+node.get_logger().info("Info message")
+node.get_logger().warn("Warning message")
+node.get_logger().error("Error message")
+        `}</pre>
+        
+        <h2>rclpy.time.Time</h2>
+        
+        <p>ROS 2 میں وقت کی نمائندگی کرتا ہے۔</p>
+        
+        <pre>{`
+now = node.get_clock().now()
+seconds = now.seconds_nanoseconds()[0]
+        `}</pre>
+        
+        <h2>عام پیغامات (std_msgs)</h2>
+        
+        <ul>
+          <li><code>std_msgs.msg.String</code>: ٹیکسٹ ڈیٹا</li>
+          <li><code>std_msgs.msg.Int32</code>: انٹیجر</li>
+          <li><code>std_msgs.msg.Float64</code>: فلوٹ</li>
+          <li><code>std_msgs.msg.Bool</code>: بولین</li>
+        </ul>
+        
+        <h2>جیومیٹری پیغامات (geometry_msgs)</h2>
+        
+        <ul>
+          <li><code>geometry_msgs.msg.Twist</code>: رفتار (لکیری + کونیی)</li>
+          <li><code>geometry_msgs.msg.Pose</code>: پوزیشن + واقفیت</li>
+          <li><code>geometry_msgs.msg.Point</code>: XYZ کوآرڈینیٹ</li>
+        </ul>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Python API Reference</h1>
+      
+      <h2>rclpy.node.Node</h2>
+      
+      <p>Base class for creating a ROS 2 node.</p>
+      
+      <h3>create_publisher(msg_type, topic, qos_profile)</h3>
+      <p>Creates a new publisher.</p>
+      <ul>
+        <li><code>msg_type</code>: Message class (e.g., <code>String</code>)</li>
+        <li><code>topic</code>: Topic name (string)</li>
+        <li><code>qos_profile</code>: QoS profile or queue size (int)</li>
+      </ul>
+      
+      <h3>create_subscription(msg_type, topic, callback, qos_profile)</h3>
+      <p>Creates a new subscriber.</p>
+      <ul>
+        <li><code>callback</code>: Function to call when message is received</li>
+      </ul>
+      
+      <h3>create_timer(timer_period_sec, callback)</h3>
+      <p>Creates a timer that runs callback periodically.</p>
+      
+      <h3>get_logger()</h3>
+      <p>Returns the node's logger for logging.</p>
+      
+      <h2>rclpy.logging</h2>
+      
+      <pre>{`
+node.get_logger().info("Info message")
+node.get_logger().warn("Warning message")
+node.get_logger().error("Error message")
+      `}</pre>
+      
+      <h2>rclpy.time.Time</h2>
+      
+      <p>Represents time in ROS 2.</p>
+      
+      <pre>{`
+now = node.get_clock().now()
+seconds = now.seconds_nanoseconds()[0]
+      `}</pre>
+      
+      <h2>Common Messages (std_msgs)</h2>
+      
+      <ul>
+        <li><code>std_msgs.msg.String</code>: Text data</li>
+        <li><code>std_msgs.msg.Int32</code>: Integer</li>
+        <li><code>std_msgs.msg.Float64</code>: Float</li>
+        <li><code>std_msgs.msg.Bool</code>: Boolean</li>
+      </ul>
+      
+      <h2>Geometry Messages (geometry_msgs)</h2>
+      
+      <ul>
+        <li><code>geometry_msgs.msg.Twist</code>: Velocity (linear + angular)</li>
+        <li><code>geometry_msgs.msg.Pose</code>: Position + Orientation</li>
+        <li><code>geometry_msgs.msg.Point</code>: XYZ coordinates</li>
+      </ul>
+    </div>
+  );
+}

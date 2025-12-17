@@ -1,0 +1,35 @@
+# Claude Settings
+
+{
+    "projectStructure": {
+        "specs": "specs/",
+        "prompts": "history/prompts/",
+        "docs": ".specify/docs/",
+        "templates": ".specify/templates/",
+        "memory": ".specify/memory/"
+    },
+    "workflow": {
+        "defaultFlow": [
+            "specify",
+            "clarify",
+            "plan",
+            "tasks",
+            "implement",
+            "phr"
+        ],
+        "requiresReview": [
+            "spec",
+            "plan",
+            "adr"
+        ],
+        "autoGenerate": [
+            "tasks",
+            "checklist"
+        ]
+    },
+    "conventions": {
+        "commitFormat": "conventional",
+        "branchNaming": "feature/issue-number-description",
+        "prTemplate": ".github/pull_request_template.md"
+    }
+}

@@ -10,6 +10,8 @@ export default function LanguageSwitcher() {
         // Set document direction for RTL support
         document.documentElement.dir = lng === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = lng;
+        // Force re-render
+        window.dispatchEvent(new Event('languagechange'));
     };
 
     return (

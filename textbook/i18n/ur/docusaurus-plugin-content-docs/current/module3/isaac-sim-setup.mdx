@@ -1,0 +1,172 @@
+---
+sidebar_position: 2
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function IsaacSimSetup() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Isaac Sim سیٹ اپ کرنا</h1>
+        
+        <h2>🎯 NVIDIA Isaac Sim کیا ہے؟</h2>
+        
+        <p><strong>NVIDIA Isaac Sim</strong> ایک فوٹو ریئلسٹک، جسمانی طور پر درست ورچوئل ماحول ہے جو NVIDIA Omniverse پر بنایا گیا ہے۔ یہ مصنوعی ڈیٹا جنریشن اور AI پر مبنی روبوٹکس کی تربیت کے لیے ڈیزائن کیا گیا ہے۔</p>
+        
+        <h2>💻 سسٹم کے تقاضے</h2>
+        
+        <p>Isaac Sim وسائل پر بھاری ہے:</p>
+        
+        <ul>
+          <li><strong>GPU</strong>: NVIDIA RTX 2070 یا اس سے بہتر (RTX 3090/4090 تجویز کردہ)</li>
+          <li><strong>RAM</strong>: 32GB (64GB تجویز کردہ)</li>
+          <li><strong>OS</strong>: Ubuntu 20.04/22.04 یا Windows 10/11</li>
+          <li><strong>Driver</strong>: تازہ ترین NVIDIA اسٹوڈیو یا گیم ریڈی ڈرائیور</li>
+        </ul>
+        
+        <h2>📥 تنصیب (Omniverse Launcher)</h2>
+        
+        <ol>
+          <li><a href="https://www.nvidia.com/en-us/omniverse/">NVIDIA Omniverse Launcher</a> ڈاؤن لوڈ اور انسٹال کریں۔</li>
+          <li>"Exchange" ٹیب پر جائیں اور "Isaac Sim" تلاش کریں۔</li>
+          <li>تازہ ترین ورژن انسٹال کریں۔</li>
+          <li>"Nucleus" سروس انسٹال کریں (اثاثوں کے انتظام کے لیے)۔</li>
+        </ol>
+        
+        <h2>🚀 Isaac Sim لانچ کرنا</h2>
+        
+        <p>لانچر سے "Launch" پر کلک کریں۔ پہلی بار لوڈ ہونے میں کچھ وقت لگ سکتا ہے کیونکہ یہ شیڈرز کو مرتب کرتا ہے۔</p>
+        
+        <h2>🔌 ROS 2 برج</h2>
+        
+        <p>Isaac Sim <strong>OmniGraph</strong> کے ذریعے ROS 2 کے ساتھ بات چیت کرتا ہے۔</p>
+        
+        <h3>ROS 2 برج کو فعال کرنا</h3>
+        
+        <ol>
+          <li><code>Window &rarr; Extensions</code> پر جائیں۔</li>
+          <li><code>omni.isaac.ros2_bridge</code> تلاش کریں اور اسے فعال کریں۔</li>
+        </ol>
+        
+        <h3>ایکشن گراف سیٹ اپ</h3>
+        
+        <p>ROS 2 پیغامات کو پبلش/سبسکرائب کرنے کے لیے آپ کو ایک ایکشن گراف بنانے کی ضرورت ہے:</p>
+        
+        <ol>
+          <li>ایک نیا ایکشن گراف بنائیں (<code>Create &rarr; Visual Scripting &rarr; Action Graph</code>)۔</li>
+          <li><code>ROS2 Context</code> نوڈ شامل کریں۔</li>
+          <li><code>ROS2 Subscribe Clock</code> نوڈ شامل کریں (وقت کی مطابقت پذیری کے لیے)۔</li>
+          <li><code>ROS2 Publish Transform Tree</code> نوڈ شامل کریں (TF کے لیے)۔</li>
+        </ol>
+        
+        <h2>🤖 اپنا پہلا روبوٹ لوڈ کرنا</h2>
+        
+        <p>Isaac Sim بہت سے تیار شدہ روبوٹس کے ساتھ آتا ہے:</p>
+        
+        <ol>
+          <li><code>Isaac Assets &rarr; Robots &rarr; Mobile</code> پر جائیں۔</li>
+          <li><code>Carter</code> یا <code>Kaya</code> روبوٹ کو اسٹیج پر گھسیٹیں۔</li>
+          <li>پلے دبائیں اور دیکھیں کہ یہ فزکس کے ساتھ کیسے تعامل کرتا ہے۔</li>
+        </ol>
+        
+        <h2>🛠️ URDF درآمد کرنا</h2>
+        
+        <p>آپ اپنے URDF روبوٹس بھی لا سکتے ہیں:</p>
+        
+        <ol>
+          <li><code>Isaac Utils &rarr; Workflows &rarr; URDF Importer</code> پر جائیں۔</li>
+          <li>اپنی <code>.urdf</code> فائل منتخب کریں۔</li>
+          <li><code>Import</code> پر کلک کریں۔ Isaac Sim خود بخود اسے USD (Universal Scene Description) فارمیٹ میں تبدیل کر دے گا۔</li>
+        </ol>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ Isaac Sim چل رہا ہے، آئیے دیکھتے ہیں کہ <strong>Isaac Gym</strong> کا استعمال کرتے ہوئے کمک سیکھنے (Reinforcement Learning) کے ساتھ روبوٹس کو کیسے تربیت دی جائے →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Setting up Isaac Sim</h1>
+      
+      <h2>🎯 What is NVIDIA Isaac Sim?</h2>
+      
+      <p><strong>NVIDIA Isaac Sim</strong> is a photorealistic, physically accurate virtual environment built on NVIDIA Omniverse. It is designed for synthetic data generation and AI-based robotics training.</p>
+      
+      <h2>💻 System Requirements</h2>
+      
+      <p>Isaac Sim is resource-intensive:</p>
+      
+      <ul>
+        <li><strong>GPU</strong>: NVIDIA RTX 2070 or better (RTX 3090/4090 recommended)</li>
+        <li><strong>RAM</strong>: 32GB (64GB recommended)</li>
+        <li><strong>OS</strong>: Ubuntu 20.04/22.04 or Windows 10/11</li>
+        <li><strong>Driver</strong>: Latest NVIDIA Studio or Game Ready Driver</li>
+      </ul>
+      
+      <h2>📥 Installation (Omniverse Launcher)</h2>
+      
+      <ol>
+        <li>Download and install <a href="https://www.nvidia.com/en-us/omniverse/">NVIDIA Omniverse Launcher</a>.</li>
+        <li>Go to "Exchange" tab and search for "Isaac Sim".</li>
+        <li>Install the latest version.</li>
+        <li>Install "Nucleus" service (for asset management).</li>
+      </ol>
+      
+      <h2>🚀 Launching Isaac Sim</h2>
+      
+      <p>Click "Launch" from the launcher. The first load might take some time as it compiles shaders.</p>
+      
+      <h2>🔌 ROS 2 Bridge</h2>
+      
+      <p>Isaac Sim communicates with ROS 2 via <strong>OmniGraph</strong>.</p>
+      
+      <h3>Enabling ROS 2 Bridge</h3>
+      
+      <ol>
+        <li>Go to <code>Window &rarr; Extensions</code>.</li>
+        <li>Search for <code>omni.isaac.ros2_bridge</code> and enable it.</li>
+      </ol>
+      
+      <h3>Action Graph Setup</h3>
+      
+      <p>You need to create an Action Graph to publish/subscribe to ROS 2 messages:</p>
+      
+      <ol>
+        <li>Create a new Action Graph (<code>Create &rarr; Visual Scripting &rarr; Action Graph</code>).</li>
+        <li>Add <code>ROS2 Context</code> node.</li>
+        <li>Add <code>ROS2 Subscribe Clock</code> node (for time sync).</li>
+        <li>Add <code>ROS2 Publish Transform Tree</code> node (for TF).</li>
+      </ol>
+      
+      <h2>🤖 Loading Your First Robot</h2>
+      
+      <p>Isaac Sim comes with many ready-to-use robots:</p>
+      
+      <ol>
+        <li>Go to <code>Isaac Assets &rarr; Robots &rarr; Mobile</code>.</li>
+        <li>Drag <code>Carter</code> or <code>Kaya</code> robot onto the stage.</li>
+        <li>Press Play and see how it interacts with physics.</li>
+      </ol>
+      
+      <h2>🛠️ Importing URDF</h2>
+      
+      <p>You can also bring your own URDF robots:</p>
+      
+      <ol>
+        <li>Go to <code>Isaac Utils &rarr; Workflows &rarr; URDF Importer</code>.</li>
+        <li>Select your <code>.urdf</code> file.</li>
+        <li>Click <code>Import</code>. Isaac Sim will automatically convert it to USD (Universal Scene Description) format.</li>
+      </ol>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that Isaac Sim is running, let's see how to train robots with Reinforcement Learning using <strong>Isaac Gym</strong> →</p>
+    </div>
+  );
+}

@@ -1,0 +1,238 @@
+---
+sidebar_position: 2
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function GazeboSimulation() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Gazebo کے ساتھ نقلی (Simulation)</h1>
+        
+        <h2>🎯 Gazebo کا تعارف</h2>
+        
+        <p><strong>Gazebo</strong> ایک طاقتور 3D روبوٹکس سمیلیٹر ہے جو آپ کو پیچیدہ ماحول میں روبوٹس کو ڈیزائن، ٹیسٹ اور تربیت دینے کی اجازت دیتا ہے۔ یہ ROS 2 کے ساتھ بغیر کسی رکاوٹ کے ضم ہوتا ہے، جو اسے فزیکل AI کے لیے ایک ضروری ٹول بناتا ہے۔</p>
+        
+        <h2>🏗️ Gazebo فن تعمیر</h2>
+        
+        <p>Gazebo کلائنٹ-سرور فن تعمیر کا استعمال کرتا ہے:</p>
+        
+        <ul>
+          <li><strong>gzserver</strong>: فزکس لوپ اور سینسر جنریشن چلاتا ہے (ہیڈ لیس)</li>
+          <li><strong>gzclient</strong>: گرافیکل انٹرفیس فراہم کرتا ہے</li>
+        </ul>
+        
+        <h2>🚀 اپنا پہلا سمولیشن شروع کرنا</h2>
+        
+        <p>Gazebo کو ROS 2 انضمام کے ساتھ لانچ کریں:</p>
+        
+        <pre>{`
+# Install Gazebo ROS packages
+sudo apt install ros-humble-gazebo-ros-pkgs
+
+# Launch Gazebo with an empty world
+ros2 launch gazebo_ros gazebo.launch.py
+        `}</pre>
+        
+        <h2>🌍 دنیاؤں (Worlds) کے ساتھ کام کرنا</h2>
+        
+        <p>دنیا (World) فائلیں (<code>.world</code>) ماحول کی وضاحت کرتی ہیں، بشمول روشنی، کشش ثقل، اور جامد اشیاء۔</p>
+        
+        <h3>ایک حسب ضرورت دنیا بنانا</h3>
+        
+        <pre>{`
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+  </world>
+</sdf>
+        `}</pre>
+        
+        <h2>🤖 روبوٹس کو سپون (Spawn) کرنا</h2>
+        
+        <p>آپ <code>spawn_entity</code> نوڈ کا استعمال کرتے ہوئے اپنے URDF روبوٹ کو Gazebo میں لوڈ کر سکتے ہیں:</p>
+        
+        <pre>{`
+ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity my_robot
+        `}</pre>
+        
+        <h2>🔌 ROS 2 کنٹرول</h2>
+        
+        <p>Gazebo پلگ انز ROS 2 کو نقلی روبوٹ کو کنٹرول کرنے کی اجازت دیتے ہیں۔</p>
+        
+        <h3>Diff Drive کنٹرولر شامل کرنا</h3>
+        
+        <p>اپنے URDF میں یہ شامل کریں:</p>
+        
+        <pre>{`
+<gazebo>
+  <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+    <ros>
+      <namespace>/demo</namespace>
+    </ros>
+    <left_joint>left_wheel_joint</left_joint>
+    <right_joint>right_wheel_joint</right_joint>
+    <wheel_separation>0.4</wheel_separation>
+    <wheel_diameter>0.1</wheel_diameter>
+    <max_wheel_torque>20</max_wheel_torque>
+    <max_wheel_acceleration>1.0</max_wheel_acceleration>
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <publish_wheel_tf>true</publish_wheel_tf>
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_link</robot_base_frame>
+  </plugin>
+</gazebo>
+        `}</pre>
+        
+        <h2>📊 سینسر سمولیشن</h2>
+        
+        <p>Gazebo حقیقی دنیا کے سینسرز کی نقل کر سکتا ہے:</p>
+        
+        <ul>
+          <li>کیمرے (RGB, Depth)</li>
+          <li>Lidar (Laser Scanners)</li>
+          <li>IMU (Inertial Measurement Units)</li>
+          <li>GPS</li>
+        </ul>
+        
+        <h2>🛠️ بہترین طریقے</h2>
+        
+        <ol>
+          <li><strong>ہلکے ماڈلز استعمال کریں</strong>: پیچیدہ میشز نقلی رفتار کو سست کر دیتے ہیں۔ تصادم کے لیے سادہ شکلیں استعمال کریں۔</li>
+          <li><strong>ریئل ٹائم فیکٹر</strong>: اس بات کو یقینی بنانے کے لیے کہ آپ کا سمولیشن حقیقی وقت میں چل رہا ہے، GUI میں ریئل ٹائم فیکٹر کی نگرانی کریں۔</li>
+          <li><strong>ہیڈ لیس موڈ</strong>: تربیت کے لیے، وسائل کو بچانے کے لیے GUI کے بغیر <code>gzserver</code> چلائیں۔</li>
+        </ol>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ آپ Gazebo میں نقلی کر سکتے ہیں، آئیے دیکھتے ہیں کہ <strong>Unity</strong> کو زیادہ بصری طور پر حقیقت پسندانہ نقلی کے لیے کیسے استعمال کیا جائے →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Simulating with Gazebo</h1>
+      
+      <h2>🎯 Introduction to Gazebo</h2>
+      
+      <p><strong>Gazebo</strong> is a powerful 3D robotics simulator that allows you to design, test, and train robots in complex environments. It integrates seamlessly with ROS 2, making it an essential tool for Physical AI.</p>
+      
+      <h2>🏗️ Gazebo Architecture</h2>
+      
+      <p>Gazebo uses a client-server architecture:</p>
+      
+      <ul>
+        <li><strong>gzserver</strong>: Runs the physics loop and sensor generation (headless)</li>
+        <li><strong>gzclient</strong>: Provides the graphical interface</li>
+      </ul>
+      
+      <h2>🚀 Starting Your First Simulation</h2>
+      
+      <p>Launch Gazebo with ROS 2 integration:</p>
+      
+      <pre>{`
+# Install Gazebo ROS packages
+sudo apt install ros-humble-gazebo-ros-pkgs
+
+# Launch Gazebo with an empty world
+ros2 launch gazebo_ros gazebo.launch.py
+      `}</pre>
+      
+      <h2>🌍 Working with Worlds</h2>
+      
+      <p>World files (<code>.world</code>) define the environment, including lighting, gravity, and static objects.</p>
+      
+      <h3>Creating a Custom World</h3>
+      
+      <pre>{`
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+  </world>
+</sdf>
+      `}</pre>
+      
+      <h2>🤖 Spawning Robots</h2>
+      
+      <p>You can load your URDF robot into Gazebo using the <code>spawn_entity</code> node:</p>
+      
+      <pre>{`
+ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity my_robot
+      `}</pre>
+      
+      <h2>🔌 ROS 2 Control</h2>
+      
+      <p>Gazebo plugins allow ROS 2 to control the simulated robot.</p>
+      
+      <h3>Adding a Diff Drive Controller</h3>
+      
+      <p>Add this to your URDF:</p>
+      
+      <pre>{`
+<gazebo>
+  <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+    <ros>
+      <namespace>/demo</namespace>
+    </ros>
+    <left_joint>left_wheel_joint</left_joint>
+    <right_joint>right_wheel_joint</right_joint>
+    <wheel_separation>0.4</wheel_separation>
+    <wheel_diameter>0.1</wheel_diameter>
+    <max_wheel_torque>20</max_wheel_torque>
+    <max_wheel_acceleration>1.0</max_wheel_acceleration>
+    <publish_odom>true</publish_odom>
+    <publish_odom_tf>true</publish_odom_tf>
+    <publish_wheel_tf>true</publish_wheel_tf>
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_link</robot_base_frame>
+  </plugin>
+</gazebo>
+      `}</pre>
+      
+      <h2>📊 Sensor Simulation</h2>
+      
+      <p>Gazebo can simulate real-world sensors:</p>
+      
+      <ul>
+        <li>Cameras (RGB, Depth)</li>
+        <li>Lidar (Laser Scanners)</li>
+        <li>IMU (Inertial Measurement Units)</li>
+        <li>GPS</li>
+      </ul>
+      
+      <h2>🛠️ Best Practices</h2>
+      
+      <ol>
+        <li><strong>Use Lightweight Models</strong>: Complex meshes slow down simulation. Use simple shapes for collision.</li>
+        <li><strong>Real-time Factor</strong>: Monitor the real-time factor in the GUI to ensure your simulation is running in real-time.</li>
+        <li><strong>Headless Mode</strong>: For training, run <code>gzserver</code> without the GUI to save resources.</li>
+      </ol>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that you can simulate in Gazebo, let's see how to use <strong>Unity</strong> for more visually realistic simulations →</p>
+    </div>
+  );
+}

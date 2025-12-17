@@ -1,0 +1,270 @@
+---
+sidebar_position: 4
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function SensorSimulation() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>سینسرز کی نقلی (Simulation)</h1>
+        
+        <h2>🎯 سینسر سمولیشن کیوں؟</h2>
+        
+        <p>فزیکل AI کے لیے، درست سینسر ڈیٹا بہت ضروری ہے۔ نقلی (Simulation) ہمیں مہنگے ہارڈ ویئر کے بغیر کیمروں، LiDARs، اور IMUs کی جانچ کرنے کی اجازت دیتی ہے۔</p>
+        
+        <h2>📷 کیمرہ سمولیشن</h2>
+        
+        <p>Gazebo میں کیمرہ شامل کرنا:</p>
+        
+        <pre>{`
+<gazebo reference="camera_link">
+  <sensor type="camera" name="camera1">
+    <update_rate>30.0</update_rate>
+    <camera name="head">
+      <horizontal_fov>1.3962634</horizontal_fov>
+      <image>
+        <width>800</width>
+        <height>800</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.02</near>
+        <far>300</far>
+      </clip>
+    </camera>
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>0.0</updateRate>
+      <cameraName>rrbot/camera1</cameraName>
+      <imageTopicName>image_raw</imageTopicName>
+      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+      <frameName>camera_link</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+        `}</pre>
+        
+        <h2>📡 LiDAR سمولیشن</h2>
+        
+        <p>2D لیزر سکینر (LiDAR) نیویگیشن کے لیے ضروری ہے:</p>
+        
+        <pre>{`
+<gazebo reference="hokuyo_link">
+  <sensor type="ray" name="head_hokuyo_sensor">
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>true</visualize>
+    <update_rate>40</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>720</samples>
+          <resolution>1</resolution>
+          <min_angle>-1.570796</min_angle>
+          <max_angle>1.570796</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.10</min>
+        <max>30.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+    <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <namespace>/rrbot</namespace>
+        <remapping>~/out:=scan</remapping>
+      </ros>
+      <output_type>sensor_msgs/LaserScan</output_type>
+      <frame_name>hokuyo_link</frame_name>
+    </plugin>
+  </sensor>
+</gazebo>
+        `}</pre>
+        
+        <h2>🧭 IMU سمولیشن</h2>
+        
+        <p>IMU (Inertial Measurement Unit) ایکسلریشن اور واقفیت فراہم کرتا ہے:</p>
+        
+        <pre>{`
+<gazebo reference="imu_link">
+  <gravity>true</gravity>
+  <sensor name="imu_sensor" type="imu">
+    <always_on>true</always_on>
+    <update_rate>100</update_rate>
+    <visualize>true</visualize>
+    <topic>__default_topic__</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+      <topicName>imu</topicName>
+      <bodyName>imu_link</bodyName>
+      <updateRateHZ>10.0</updateRateHZ>
+      <gaussianNoise>0.0</gaussianNoise>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+      <frameName>imu_link</frameName>
+      <initialOrientationAsReference>false</initialOrientationAsReference>
+    </plugin>
+    <pose>0 0 0 0 0 0</pose>
+  </sensor>
+</gazebo>
+        `}</pre>
+        
+        <h2>🔊 شور (Noise) شامل کرنا</h2>
+        
+        <p>حقیقی دنیا کے سینسر کامل نہیں ہوتے۔ اپنے سمولیشن کو حقیقت پسندانہ بنانے کے لیے شور شامل کریں:</p>
+        
+        <pre>{`
+<noise>
+  <type>gaussian</type>
+  <mean>0.0</mean>
+  <stddev>0.01</stddev>
+</noise>
+        `}</pre>
+        
+        <h2>🛠️ بہترین طریقے</h2>
+        
+        <ul>
+          <li><strong>کیلیبریشن</strong>: یقینی بنائیں کہ آپ کے نقلی سینسرز آپ کے حقیقی ہارڈ ویئر کی خصوصیات (FOV، رینج، شور) سے مماثل ہیں۔</li>
+          <li><strong>فریم ریٹ</strong>: ہائی ریزولوشن کیمرے سمولیشن کو سست کر سکتے ہیں۔ کارکردگی کے لیے ریزولوشن یا اپ ڈیٹ کی شرح کو کم کریں۔</li>
+        </ul>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>مبارک ہو! آپ نے ماڈیول 2 مکمل کر لیا ہے۔ اگلا، <strong>ماڈیول 3: NVIDIA Isaac ایکو سسٹم</strong> میں جدید سمولیشن دریافت کریں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Simulating Sensors</h1>
+      
+      <h2>🎯 Why Sensor Simulation?</h2>
+      
+      <p>For Physical AI, accurate sensor data is crucial. Simulation allows us to test cameras, LiDARs, and IMUs without expensive hardware.</p>
+      
+      <h2>📷 Camera Simulation</h2>
+      
+      <p>Adding a camera in Gazebo:</p>
+      
+      <pre>{`
+<gazebo reference="camera_link">
+  <sensor type="camera" name="camera1">
+    <update_rate>30.0</update_rate>
+    <camera name="head">
+      <horizontal_fov>1.3962634</horizontal_fov>
+      <image>
+        <width>800</width>
+        <height>800</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.02</near>
+        <far>300</far>
+      </clip>
+    </camera>
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>0.0</updateRate>
+      <cameraName>rrbot/camera1</cameraName>
+      <imageTopicName>image_raw</imageTopicName>
+      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+      <frameName>camera_link</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+      `}</pre>
+      
+      <h2>📡 LiDAR Simulation</h2>
+      
+      <p>A 2D Laser Scanner (LiDAR) is essential for navigation:</p>
+      
+      <pre>{`
+<gazebo reference="hokuyo_link">
+  <sensor type="ray" name="head_hokuyo_sensor">
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>true</visualize>
+    <update_rate>40</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>720</samples>
+          <resolution>1</resolution>
+          <min_angle>-1.570796</min_angle>
+          <max_angle>1.570796</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.10</min>
+        <max>30.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+    <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+      <ros>
+        <namespace>/rrbot</namespace>
+        <remapping>~/out:=scan</remapping>
+      </ros>
+      <output_type>sensor_msgs/LaserScan</output_type>
+      <frame_name>hokuyo_link</frame_name>
+    </plugin>
+  </sensor>
+</gazebo>
+      `}</pre>
+      
+      <h2>🧭 IMU Simulation</h2>
+      
+      <p>IMU (Inertial Measurement Unit) provides acceleration and orientation:</p>
+      
+      <pre>{`
+<gazebo reference="imu_link">
+  <gravity>true</gravity>
+  <sensor name="imu_sensor" type="imu">
+    <always_on>true</always_on>
+    <update_rate>100</update_rate>
+    <visualize>true</visualize>
+    <topic>__default_topic__</topic>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+      <topicName>imu</topicName>
+      <bodyName>imu_link</bodyName>
+      <updateRateHZ>10.0</updateRateHZ>
+      <gaussianNoise>0.0</gaussianNoise>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+      <frameName>imu_link</frameName>
+      <initialOrientationAsReference>false</initialOrientationAsReference>
+    </plugin>
+    <pose>0 0 0 0 0 0</pose>
+  </sensor>
+</gazebo>
+      `}</pre>
+      
+      <h2>🔊 Adding Noise</h2>
+      
+      <p>Real-world sensors are not perfect. Add noise to make your simulation realistic:</p>
+      
+      <pre>{`
+<noise>
+  <type>gaussian</type>
+  <mean>0.0</mean>
+  <stddev>0.01</stddev>
+</noise>
+      `}</pre>
+      
+      <h2>🛠️ Best Practices</h2>
+      
+      <ul>
+        <li><strong>Calibration</strong>: Ensure your simulated sensors match your real hardware specs (FOV, range, noise).</li>
+        <li><strong>Frame Rate</strong>: High-resolution cameras can slow down simulation. Reduce resolution or update rate for performance.</li>
+      </ul>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Congratulations! You've completed Module 2. Next, explore <strong>Module 3: NVIDIA Isaac Ecosystem</strong> to discover advanced simulation →</p>
+    </div>
+  );
+}
