@@ -102,12 +102,8 @@ const config: Config = {
           label: 'Textbook',
         },
         {
-          href: 'https://github.com/your-username/physical-ai-robotics-textbook',
+          href: 'https://github.com/Tahir-yamin/physical-ai-textbook',
           label: 'GitHub',
-          position: 'right',
-        },
-        {
-          type: 'custom-LanguageSwitcher',
           position: 'right',
         },
       ],
