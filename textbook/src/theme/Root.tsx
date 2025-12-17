@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from '@docusaurus/router';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import ChatWidget from '../components/ChatWidget';
 import AuthModal from '../components/AuthModal';
 import NavbarLanguageSwitcher from '../components/NavbarLanguageSwitcher';
 import '../i18n/config'; // Initialize i18n
 
 // Swizzled Root component to add global ChatWidget and Auth with protected routes
-export default function Root({ children }: { children: React.ReactNode }) {
+export default function Root({ children }: { children: React.NodeNode }) {
     const location = useLocation();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [user, setUser] = useState<any>(null);
 
-    // Load user from localStorage on mount
+    // Load user from localStorage on mount - only in browser
     useEffect(() => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-            try {
-                setUser(JSON.parse(savedUser));
-            } catch (e) {
-                console.error('Error parsing saved user:', e);
+        if (ExecutionEnvironment.canUseDOM) {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                try {
+                    setUser(JSON.parse(savedUser));
+                } catch (e) {
+                    console.error('Error parsing saved user:', e);
+                }
             }
         }
     }, []);
