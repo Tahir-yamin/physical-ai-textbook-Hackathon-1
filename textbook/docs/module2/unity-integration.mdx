@@ -1,0 +1,238 @@
+---
+sidebar_position: 3
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function UnityIntegration() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Unity انضمام</h1>
+        
+        <h2>🎯 Unity کیوں استعمال کریں؟</h2>
+        
+        <p>اگرچہ Gazebo روبوٹکس کے لیے معیاری ہے، <strong>Unity</strong> گیم انجن اعلیٰ بصری وفاداری، جدید طبیعیات، اور VR/AR صلاحیتیں پیش کرتا ہے۔ یہ ہیومن روبوٹ تعامل (HRI) اور بصری AI تربیت کے لیے بہترین ہے۔</p>
+        
+        <h2>🔌 ROS-TCP کنیکٹر</h2>
+        
+        <p>Unity <strong>ROS-TCP Connector</strong> کے ذریعے ROS 2 کے ساتھ بات چیت کرتا ہے، جو پیغامات کو JSON/BSON میں سیریلائز کرتا ہے اور انہیں TCP کے ذریعے بھیجتا ہے۔</p>
+        
+        <h3>سیٹ اپ</h3>
+        
+        <ol>
+          <li>Unity Hub انسٹال کریں اور ایک نیا 3D پروجیکٹ بنائیں۔</li>
+          <li>پیکیج مینیجر کے ذریعے <code>Unity Robotics Hub</code> پیکیج درآمد کریں۔</li>
+          <li>ROS 2 سائیڈ پر TCP اینڈ پوائنٹ سیٹ اپ کریں:</li>
+        </ol>
+        
+        <pre>{`
+# Clone the endpoint package
+git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint
+
+# Build and run
+colcon build
+source install/setup.bash
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0
+        `}</pre>
+        
+        <h2>🤖 Unity میں URDF درآمد کرنا</h2>
+        
+        <p>Unity ایک <strong>URDF Importer</strong> ٹول فراہم کرتا ہے:</p>
+        
+        <ol>
+          <li>اپنے <code>package.xml</code> اور URDF فائلوں کو Unity کے <code>Assets</code> فولڈر میں کاپی کریں۔</li>
+          <li>دائیں کلک کریں &rarr; <code>Import Robot from URDF</code>۔</li>
+          <li>درآمد کی ترتیبات (محور کی اصلاح، میش کولائیڈرز) کو ترتیب دیں۔</li>
+        </ol>
+        
+        <h2>📡 ڈیٹا پبلش اور سبسکرائب کرنا</h2>
+        
+        <h3>Unity سے ROS 2 (پبلشر)</h3>
+        
+        <p>Unity C# اسکرپٹ:</p>
+        
+        <pre>{`
+using UnityEngine;
+using Unity.Robotics.ROSTCPConnector;
+using RosMessageTypes.Geometry;
+
+public class PositionPublisher : MonoBehaviour
+{
+    ROSConnection ros;
+    public string topicName = "pos_rot";
+
+    void Start()
+    {
+        ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<PoseMsg>(topicName);
+    }
+
+    void Update()
+    {
+        PoseMsg pose = new PoseMsg();
+        pose.position.x = transform.position.x;
+        pose.position.y = transform.position.y;
+        pose.position.z = transform.position.z;
+        
+        ros.Publish(topicName, pose);
+    }
+}
+        `}</pre>
+        
+        <h3>ROS 2 سے Unity (سبسکرائبر)</h3>
+        
+        <pre>{`
+using UnityEngine;
+using Unity.Robotics.ROSTCPConnector;
+using RosMessageTypes.Std;
+
+public class ColorSubscriber : MonoBehaviour
+{
+    void Start()
+    {
+        ROSConnection.GetOrCreateInstance().Subscribe<StringMsg>("color_topic", ChangeColor);
+    }
+
+    void ChangeColor(StringMsg msg)
+    {
+        if (msg.data == "red")
+            GetComponent<Renderer>().material.color = Color.red;
+    }
+}
+        `}</pre>
+        
+        <h2>🎮 ورچوئل رئیلٹی (VR) انضمام</h2>
+        
+        <p>Unity کا XR پلگ ان آپ کو VR ہیڈسیٹ (Oculus, HTC Vive) کا استعمال کرتے ہوئے روبوٹس کو کنٹرول کرنے کی اجازت دیتا ہے۔ یہ ٹیلی آپریشن اور تربیت کے لیے طاقتور ہے۔</p>
+        
+        <h2>🛠️ بہترین طریقے</h2>
+        
+        <ul>
+          <li><strong>کوآرڈینیٹ سسٹمز</strong>: Unity بائیں ہاتھ کے کوآرڈینیٹ سسٹم (Y-up) کا استعمال کرتا ہے، جبکہ ROS دائیں ہاتھ کا (Z-up) استعمال کرتا ہے۔ URDF درآمد کنندہ عام طور پر اس کو سنبھالتا ہے، لیکن تبدیلیوں سے آگاہ رہیں۔</li>
+          <li><strong>کارکردگی</strong>: فریم ریٹ کو زیادہ رکھنے کے لیے پیچیدہ مناظر کے لیے بیکڈ لائٹنگ کا استعمال کریں۔</li>
+        </ul>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>Unity کے ساتھ، آپ فوٹو ریئلسٹک ماحول بنا سکتے ہیں۔ اگلا، آئیے <strong>سینسر سمولیشن</strong> میں گہرائی میں غوطہ لگائیں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Unity Integration</h1>
+      
+      <h2>🎯 Why Use Unity?</h2>
+      
+      <p>While Gazebo is standard for robotics, <strong>Unity</strong> game engine offers superior visual fidelity, advanced physics, and VR/AR capabilities. It is excellent for Human-Robot Interaction (HRI) and visual AI training.</p>
+      
+      <h2>🔌 ROS-TCP Connector</h2>
+      
+      <p>Unity communicates with ROS 2 via the <strong>ROS-TCP Connector</strong>, which serializes messages to JSON/BSON and sends them over TCP.</p>
+      
+      <h3>Setup</h3>
+      
+      <ol>
+        <li>Install Unity Hub and create a new 3D project.</li>
+        <li>Import the <code>Unity Robotics Hub</code> package via Package Manager.</li>
+        <li>Setup the TCP endpoint on ROS 2 side:</li>
+      </ol>
+      
+      <pre>{`
+# Clone the endpoint package
+git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint
+
+# Build and run
+colcon build
+source install/setup.bash
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0
+      `}</pre>
+      
+      <h2>🤖 Importing URDF into Unity</h2>
+      
+      <p>Unity provides a <strong>URDF Importer</strong> tool:</p>
+      
+      <ol>
+        <li>Copy your <code>package.xml</code> and URDF files to Unity's <code>Assets</code> folder.</li>
+        <li>Right-click &rarr; <code>Import Robot from URDF</code>.</li>
+        <li>Configure import settings (axis correction, mesh colliders).</li>
+      </ol>
+      
+      <h2>📡 Publishing and Subscribing</h2>
+      
+      <h3>Unity to ROS 2 (Publisher)</h3>
+      
+      <p>Unity C# script:</p>
+      
+      <pre>{`
+using UnityEngine;
+using Unity.Robotics.ROSTCPConnector;
+using RosMessageTypes.Geometry;
+
+public class PositionPublisher : MonoBehaviour
+{
+    ROSConnection ros;
+    public string topicName = "pos_rot";
+
+    void Start()
+    {
+        ros = ROSConnection.GetOrCreateInstance();
+        ros.RegisterPublisher<PoseMsg>(topicName);
+    }
+
+    void Update()
+    {
+        PoseMsg pose = new PoseMsg();
+        pose.position.x = transform.position.x;
+        pose.position.y = transform.position.y;
+        pose.position.z = transform.position.z;
+        
+        ros.Publish(topicName, pose);
+    }
+}
+      `}</pre>
+      
+      <h3>ROS 2 to Unity (Subscriber)</h3>
+      
+      <pre>{`
+using UnityEngine;
+using Unity.Robotics.ROSTCPConnector;
+using RosMessageTypes.Std;
+
+public class ColorSubscriber : MonoBehaviour
+{
+    void Start()
+    {
+        ROSConnection.GetOrCreateInstance().Subscribe<StringMsg>("color_topic", ChangeColor);
+    }
+
+    void ChangeColor(StringMsg msg)
+    {
+        if (msg.data == "red")
+            GetComponent<Renderer>().material.color = Color.red;
+    }
+}
+      `}</pre>
+      
+      <h2>🎮 Virtual Reality (VR) Integration</h2>
+      
+      <p>Unity's XR plugin allows you to control robots using VR headsets (Oculus, HTC Vive). This is powerful for teleoperation and training.</p>
+      
+      <h2>🛠️ Best Practices</h2>
+      
+      <ul>
+        <li><strong>Coordinate Systems</strong>: Unity uses a Left-Handed coordinate system (Y-up), while ROS uses Right-Handed (Z-up). The URDF importer usually handles this, but be aware of transforms.</li>
+        <li><strong>Performance</strong>: Use baked lighting for complex scenes to keep frame rates high.</li>
+      </ul>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>With Unity, you can create photorealistic environments. Next, let's dive deeper into <strong>Sensor Simulation</strong> →</p>
+    </div>
+  );
+}

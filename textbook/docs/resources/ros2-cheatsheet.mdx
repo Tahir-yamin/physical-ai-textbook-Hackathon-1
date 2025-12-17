@@ -1,0 +1,202 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function ROS2Cheatsheet() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ROS 2 چیٹ شیٹ (Cheatsheet)</h1>
+        
+        <h2>📦 پیکیج مینجمنٹ</h2>
+        
+        <pre>{`
+# Create a package
+ros2 pkg create --build-type ament_python my_package
+
+# List packages
+ros2 pkg list
+
+# Find package executable
+ros2 pkg executables my_package
+        `}</pre>
+        
+        <h2>🚀 چل رہا ہے</h2>
+        
+        <pre>{`
+# Run a node
+ros2 run my_package my_node
+
+# Launch file
+ros2 launch my_package my_launch.py
+        `}</pre>
+        
+        <h2>📡 ٹاپکس (Topics)</h2>
+        
+        <pre>{`
+# List topics
+ros2 topic list
+
+# Echo topic data
+ros2 topic echo /topic_name
+
+# Show topic info (type, count)
+ros2 topic info /topic_name
+
+# Publish message manually
+ros2 topic pub /topic_name std_msgs/msg/String "data: 'Hello'"
+        `}</pre>
+        
+        <h2>🔄 سروسز (Services)</h2>
+        
+        <pre>{`
+# List services
+ros2 service list
+
+# Call service
+ros2 service call /service_name my_interfaces/srv/AddTwoInts "{a: 1, b: 2}"
+
+# Show service type
+ros2 service type /service_name
+        `}</pre>
+        
+        <h2>🎬 ایکشنز (Actions)</h2>
+        
+        <pre>{`
+# List actions
+ros2 action list
+
+# Send goal
+ros2 action send_goal /action_name my_interfaces/action/Fibonacci "{order: 5}"
+        `}</pre>
+        
+        <h2>🛠️ ٹولز</h2>
+        
+        <pre>{`
+# Visualizer
+rviz2
+
+# GUI Tools
+rqt
+
+# Record data
+ros2 bag record -a
+ros2 bag play my_bag_0.db3
+        `}</pre>
+        
+        <h2>🐍 Colcon Build</h2>
+        
+        <pre>{`
+# Build all packages
+colcon build
+
+# Build specific package
+colcon build --packages-select my_package
+
+# Source workspace
+source install/setup.bash
+        `}</pre>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>ROS 2 Cheatsheet</h1>
+      
+      <h2>📦 Package Management</h2>
+      
+      <pre>{`
+# Create a package
+ros2 pkg create --build-type ament_python my_package
+
+# List packages
+ros2 pkg list
+
+# Find package executable
+ros2 pkg executables my_package
+      `}</pre>
+      
+      <h2>🚀 Running</h2>
+      
+      <pre>{`
+# Run a node
+ros2 run my_package my_node
+
+# Launch file
+ros2 launch my_package my_launch.py
+      `}</pre>
+      
+      <h2>📡 Topics</h2>
+      
+      <pre>{`
+# List topics
+ros2 topic list
+
+# Echo topic data
+ros2 topic echo /topic_name
+
+# Show topic info (type, count)
+ros2 topic info /topic_name
+
+# Publish message manually
+ros2 topic pub /topic_name std_msgs/msg/String "data: 'Hello'"
+      `}</pre>
+      
+      <h2>🔄 Services</h2>
+      
+      <pre>{`
+# List services
+ros2 service list
+
+# Call service
+ros2 service call /service_name my_interfaces/srv/AddTwoInts "{a: 1, b: 2}"
+
+# Show service type
+ros2 service type /service_name
+      `}</pre>
+      
+      <h2>🎬 Actions</h2>
+      
+      <pre>{`
+# List actions
+ros2 action list
+
+# Send goal
+ros2 action send_goal /action_name my_interfaces/action/Fibonacci "{order: 5}"
+      `}</pre>
+      
+      <h2>🛠️ Tools</h2>
+      
+      <pre>{`
+# Visualizer
+rviz2
+
+# GUI Tools
+rqt
+
+# Record data
+ros2 bag record -a
+ros2 bag play my_bag_0.db3
+      `}</pre>
+      
+      <h2>🐍 Colcon Build</h2>
+      
+      <pre>{`
+# Build all packages
+colcon build
+
+# Build specific package
+colcon build --packages-select my_package
+
+# Source workspace
+source install/setup.bash
+      `}</pre>
+    </div>
+  );
+}

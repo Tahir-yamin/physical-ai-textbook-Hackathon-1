@@ -1,0 +1,167 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Intro() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>فزیکل AI اور ہیومنائیڈ روبوٹکس کا تعارف</h1>
+        
+        <p><strong>فزیکل AI اور ہیومنائیڈ روبوٹکس</strong> پر مکمل نصابی کتاب میں خوش آمدید۔ یہ کورس ڈیجیٹل مصنوعی ذہانت سے فزیکل دنیا میں کام کرنے والی مجسم ذہانت تک ایک تبدیلی کا سفر ہے۔</p>
+        
+        <h2>🎯 کورس کا جائزہ</h2>
+        
+        <p>AI کا مستقبل ڈیجیٹل دنیا سے آگے فزیکل دنیا میں پھیلا ہوا ہے۔ یہ کورس <strong>فزیکل AI</strong> متعارف کراتا ہے—AI سسٹمز جو حقیقت میں کام کرتے ہیں اور فزیکل قوانین کو سمجھتے ہیں۔ آپ ROS 2، Gazebo، اور NVIDIA Isaac جیسی جدید ترین ٹیکنالوجیز استعمال کرتے ہوئے ہیومنائیڈ روبوٹ ڈیزائن، شبیہ سازی اور تعینات کرنا سیکھیں گے۔</p>
+        
+        <h2>🌟 فزیکل AI کیوں اہم ہے</h2>
+        
+        <p>ہیومنائیڈ روبوٹ ہماری انسانی دنیا میں بہترین کارکردگی دکھانے کے لیے تیار ہیں کیونکہ وہ ہماری جسمانی شکل کا اشتراک کرتے ہیں اور انسانی ماحول میں تعامل سے کافی ڈیٹا کے ساتھ تربیت دی جا سکتی ہیں۔ یہ AI ماڈلز سے ایک اہم منتقلی کی نمائندگی کرتا ہے جو ڈیجیٹل ماحول تک محدود ہیں سے <strong>مجسم ذہانت</strong> تک جو فزیکل جگہ میں کام کرتی ہے۔</p>
+        
+        <blockquote><strong>کام کا مستقبل لوگوں، ذہین ایجنٹس (AI سافٹ ویئر)، اور روبوٹس کے درمیان شراکت ہوگا۔</strong></blockquote>
+        
+        <h2>📚 آپ کیا سیکھیں گے</h2>
+        
+        <p>یہ نصابی کتاب چار جامع ماڈیولز میں منظم ہے:</p>
+        
+        <h3>ماڈیول 1: روبوٹک اعصابی نظام (ROS 2)</h3>
+        <p>وہ مڈل ویئر سیکھیں جو روبوٹ کنٹرول کے لیے مواصلاتی ریڑھ کی ہڈی کا کام کرتا ہے۔ ROS 2 نوڈز، ٹاپکس، سروسز میں مہارت حاصل کریں اور Python AI ایجنٹس کو روبوٹک سسٹمز کے ساتھ مربوط کریں۔</p>
+        
+        <h3>ماڈیول 2: ڈیجیٹل ٹوئن (Gazebo اور Unity)</h3>
+        <p>فزکس شبیہ سازی اور ماحول کی تعمیر کو تلاش کریں۔ ہارڈویئر پر تعینات کرنے سے پہلے روبوٹس، فزکس، اور سینسرز کی حقیقت پسندانہ شبیہ سازی بنائیں۔</p>
+        
+        <h3>ماڈیول 3: AI-روبوٹ دماغ (NVIDIA Isaac™)</h3>
+        <p>NVIDIA کے جدید ترین پلیٹ فارم کے ساتھ اعلیٰ ادراک اور تربیت میں غوطہ لگائیں۔ فوٹو ریئلسٹک شبیہ سازی، ہارڈویئر سے تیز SLAM، اور خود مختار نیویگیشن سیکھیں۔</p>
+        
+        <h3>ماڈیول 4: Vision-Language-Action (VLA)</h3>
+        <p>بڑے لینگویج ماڈلز اور روبوٹکس کے سنگم کو دریافت کریں۔ ایسے سسٹمز بنائیں جو آواز کی کمانڈز کو سمجھیں اور قدرتی زبان کو روبوٹک اعمال میں ترجمہ کریں۔</p>
+        
+        <h2>🎓 سیکھنے کے نتائج</h2>
+        
+        <p>اس کورس کے اختتام تک، آپ قابل ہوں گے:</p>
+        
+        <ul>
+          <li>✅ فزیکل AI اصولوں اور مجسم ذہانت کو سمجھنا</li>
+          <li>✅ روبوٹک کنٹرول کے لیے ROS 2 (Robot Operating System) میں مہارت حاصل کرنا</li>
+          <li>✅ Gazebo اور Unity کے ساتھ روبوٹس کی شبیہ سازی کرنا</li>
+          <li>✅ NVIDIA Isaac AI روبوٹ پلیٹ فارم کے ساتھ ترقی کرنا</li>
+          <li>✅ قدرتی تعاملات کے لیے ہیومنائیڈ روبوٹ ڈیزائن کرنا</li>
+          <li>✅ بات چیت کرنے والی روبوٹکس کے لیے GPT ماڈلز کو مربوط کرنا</li>
+          <li>✅ ایک خودمختار ہیومنائیڈ کیپ اسٹون پروجیکٹ بنانا</li>
+        </ul>
+        
+        <h2>💡 کورس کا فلسفہ</h2>
+        
+        <p>یہ کورس <strong>عملی سیکھنے</strong> اور <strong>عملی تعمیل</strong> پر زور دیتا ہے۔ ہر ماڈیول میں شامل ہیں:</p>
+        
+        <ul>
+          <li>📖 نظریاتی بنیادیں</li>
+          <li>🛠️ عملی سبق اور مثالیں</li>
+          <li>🔬 عملی مشقیں</li>
+          <li>🚀 حقیقی دنیا کے پروجیکٹ ایپلیکیشنز</li>
+        </ul>
+        
+        <h2>🎯 کیپ اسٹون پروجیکٹ: خودمختار ہیومنائیڈ</h2>
+        
+        <p>آپ کا حتمی پروجیکٹ وہ سب کچھ مربوط کرے گا جو آپ نے سیکھا: ایک شبیہ سازی شدہ ہیومنائیڈ روبوٹ جو:</p>
+        
+        <ol>
+          <li>OpenAI Whisper استعمال کرتے ہوئے آواز کی کمانڈز وصول کرتا ہے</li>
+          <li>علمی استدلال کے لیے LLMs استعمال کرتے ہوئے اعمال کی منصوبہ بندی کرتا ہے</li>
+          <li>اعلیٰ راستہ منصوبہ بندی کے ساتھ رکاوٹوں پر نیویگیٹ کرتا ہے</li>
+          <li>کمپیوٹر ویژن استعمال کرتے ہوئے اشیاء کی شناخت کرتا ہے</li>
+          <li>شبیہ سازی شدہ ماحول میں اشیاء کو ہیرا پھیری کرتا ہے</li>
+        </ol>
+        
+        <h2>🚀 شروع کرنے کے لیے تیار ہیں؟</h2>
+        
+        <p>یہ سفر آپ کو روایتی سافٹ ویئر ڈیولپمنٹ سے آگے سوچنے کا چیلنج کرے گا۔ آپ ایسے سسٹمز بنائیں گے جو ڈیجیٹل اور فزیکل دنیa کو جوڑتے ہیں، واقعی مجسم مصنوعی ذہانت بناتے ہیں۔</p>
+        
+        <p>آئیے <strong>ماڈیول 1: روبوٹک اعصابی نظام (ROS 2)</strong> سے شروع کریں →</p>
+      </div>
+    );
+  }
+  
+  // English content
+  return (
+    <div>
+      <h1>Introduction to Physical AI & Humanoid Robotics</h1>
+      
+      <p>Welcome to the comprehensive textbook on <strong>Physical AI & Humanoid Robotics</strong>. This course represents a transformative journey from digital artificial intelligence to embodied intelligence that operates in the physical world.</p>
+      
+      <h2>🎯 Course Overview</h2>
+      
+      <p>The future of AI extends beyond digital spaces into the physical world. This course introduces <strong>Physical AI</strong>—AI systems that function in reality and comprehend physical laws. You'll learn to design, simulate, and deploy humanoid robots capable of natural human interactions using cutting-edge technologies like ROS 2, Gazebo, and NVIDIA Isaac.</p>
+      
+      <h2>🌟 Why Physical AI Matters</h2>
+      
+      <p>Humanoid robots are poised to excel in our human-centered world because they share our physical form and can be trained with abundant data from interacting in human environments. This represents a significant transition from AI models confined to digital environments to <strong>embodied intelligence</strong> that operates in physical space.</p>
+      
+      <blockquote><strong>The future of work will be a partnership between people, intelligent agents (AI software), and robots.</strong></blockquote>
+      
+      <h2>📚 What You'll Learn</h2>
+      
+      <p>This textbook is organized into four comprehensive modules:</p>
+      
+      <h3>Module 1: The Robotic Nervous System (ROS 2)</h3>
+      <p>Learn the middleware that serves as the communication backbone for robot control. Master ROS 2 nodes, topics, services, and integrate Python AI agents with robotic systems.</p>
+      
+      <h3>Module 2: The Digital Twin (Gazebo & Unity)</h3>
+      <p>Explore physics simulation and environment building. Create realistic simulations of robots, physics, and sensors before deploying to hardware.</p>
+      
+      <h3>Module 3: The AI-Robot Brain (NVIDIA Isaac™)</h3>
+      <p>Dive into advanced perception and training with NVIDIA's cutting-edge platform. Learn photorealistic simulation, hardware-accelerated SLAM, and autonomous navigation.</p>
+      
+      <h3>Module 4: Vision-Language-Action (VLA)</h3>
+      <p>Discover the convergence of large language models and robotics. Build systems that understand voice commands and translate natural language into robotic actions.</p>
+      
+      <h2>🎓 Learning Outcomes</h2>
+      
+      <p>By the end of this course, you will be able to:</p>
+      
+      <ul>
+        <li>✅ Understand Physical AI principles and embodied intelligence</li>
+        <li>✅ Master ROS 2 (Robot Operating System) for robotic control</li>
+        <li>✅ Simulate robots with Gazebo and Unity</li>
+        <li>✅ Develop with NVIDIA Isaac AI robot platform</li>
+        <li>✅ Design humanoid robots for natural interactions</li>
+        <li>✅ Integrate GPT models for conversational robotics</li>
+        <li>✅ Build an autonomous humanoid capstone project</li>
+      </ul>
+      
+      <h2>💡 Course Philosophy</h2>
+      
+      <p>This course emphasizes <strong>hands-on learning</strong> and <strong>practical implementation</strong>. Each module includes:</p>
+      
+      <ul>
+        <li>📖 Theoretical foundations</li>
+        <li>🛠️ Practical tutorials and examples</li>
+        <li>🔬 Hands-on exercises</li>
+        <li>🚀 Real-world project applications</li>
+      </ul>
+      
+      <h2>🎯 Capstone Project: The Autonomous Humanoid</h2>
+      
+      <p>Your final project will integrate everything you've learned: a simulated humanoid robot that:</p>
+      
+      <ol>
+        <li>Receives voice commands using OpenAI Whisper</li>
+        <li>Plans actions using LLMs for cognitive reasoning</li>
+        <li>Navigates obstacles with advanced path planning</li>
+        <li>Identifies objects using computer vision</li>
+        <li>Manipulates objects in a simulated environment</li>
+      </ol>
+      
+      <h2>🚀 Ready to Begin?</h2>
+      
+      <p>This journey will challenge you to think beyond traditional software development. You'll be building systems that bridge the digital and physical worlds, creating truly embodied artificial intelligence.</p>
+      
+      <p>Let's begin with <strong>Module 1: The Robotic Nervous System (ROS 2)</strong> →</p>
+    </div>
+  );
+}

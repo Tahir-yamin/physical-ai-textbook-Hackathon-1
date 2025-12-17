@@ -1,0 +1,746 @@
+---
+sidebar_position: 4
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function PythonIntegration() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Python ایجنٹس کو ROS 2 کے ساتھ جوڑنا</h1>
+        
+        <h2>🎯 تعارف</h2>
+        
+        <p>ROS 2 کے سب سے طاقتور پہلوؤں میں سے ایک <strong>Python پر مبنی AI ایجنٹس</strong> کو روبوٹک سسٹمز کے ساتھ مربوط کرنے کی صلاحیت ہے۔ یہ باب آپ کو دکھاتا ہے کہ ذہین روبوٹ کنٹرولرز بنانے کے لیے Python، <code>rclpy</code>، اور جدید AI لائبریریوں کا استعمال کیسے کریں۔</p>
+        
+        <h2>🐍 روبوٹکس کے لیے Python کیوں؟</h2>
+        
+        <p>Python روبوٹکس AI کے لیے مثالی ہے کیونکہ:</p>
+        
+        <ul>
+          <li>✅ <strong>امیر AI ایکو سسٹم</strong>: TensorFlow, PyTorch, scikit-learn</li>
+          <li>✅ <strong>تیز پروٹو ٹائپنگ</strong>: الگورتھم پر فوری تکرار</li>
+          <li>✅ <strong>آسان انضمام</strong>: rclpy کے ذریعے ROS 2 کے ساتھ ہموار</li>
+          <li>✅ <strong>کمیونٹی</strong>: وسیع لائبریریاں اور وسائل</li>
+          <li>⚠️ <strong>کارکردگی کا ٹریڈ آف</strong>: حقیقی وقت کے اہم راستوں کے لیے C++ کا استعمال کریں</li>
+        </ul>
+        
+        <h2>🔌 rclpy لائبریری</h2>
+        
+        <p><code>rclpy</code> ROS 2 کے لیے Python کلائنٹ لائبریری ہے۔ یہ فراہم کرتا ہے:</p>
+        
+        <ul>
+          <li>نوڈ کی تخلیق اور انتظام</li>
+          <li>پبلشرز، سبسکرائبرز، سروسز، ایکشنز</li>
+          <li>پیرامیٹرز اور لاگنگ</li>
+          <li>ٹائمر اور ایگزیکیوٹرز</li>
+        </ul>
+        
+        <h3>تنصیب</h3>
+        
+        <pre>{`
+# Usually installed with ROS 2
+sudo apt install python3-rclpy
+
+# Additional useful packages
+sudo apt install python3-sensor-msgs python3-geometry-msgs
+        `}</pre>
+        
+        <h2>🤖 ایک AI سے چلنے والا نوڈ بنانا</h2>
+        
+        <h3>مثال: آبجیکٹ ڈیٹیکشن نوڈ</h3>
+        
+        <p>یہ مثال ایک سادہ AI ماڈل کو ROS 2 کے ساتھ مربوط کرتی ہے:</p>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from vision_msgs.msg import Detection2DArray, Detection2D
+from cv_bridge import CvBridge
+import cv2
+import numpy as np
+
+class ObjectDetectorNode(Node):
+    def __init__(self):
+        super().__init__('object_detector')
+
+        # Declare parameters
+        self.declare_parameter('confidence_threshold', 0.5)
+        self.declare_parameter('model_path', '/path/to/model.pt')
+
+        # Create CV Bridge
+        self.bridge = CvBridge()
+
+        # Subscribe to camera feed
+        self.image_sub = self.create_subscription(
+            Image,
+            '/camera/image_raw',
+            self.image_callback,
+            10
+        )
+
+        # Publish detections
+        self.detection_pub = self.create_publisher(
+            Detection2DArray,
+            '/detected_objects',
+            10
+        )
+
+        # Load AI model (placeholder - use your actual model)
+        self.model = self.load_model()
+
+        self.get_logger().info('Object Detector Node Initialized')
+
+    def load_model(self):
+        """Load your AI model here (PyTorch, TensorFlow, etc.)"""
+        model_path = self.get_parameter('model_path').value
+        # model = torch.load(model_path)
+        # return model
+        return None  # Placeholder
+
+    def image_callback(self, msg):
+        """Process incoming images"""
+        try:
+            # Convert ROS Image to OpenCV
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+
+            # Run detection
+            detections = self.detect_objects(cv_image)
+
+            # Publish detections
+            self.publish_detections(detections)
+
+        except Exception as e:
+            self.get_logger().error(f'Error processing image: {str(e)}')
+
+    def detect_objects(self, image):
+        """Run AI model inference"""
+        # Preprocess image
+        # input_tensor = self.preprocess(image)
+
+        # Run model
+        # with torch.no_grad():
+        #     predictions = self.model(input_tensor)
+
+        # Post-process results
+        # detections = self.postprocess(predictions)
+
+        # Placeholder return
+        return []
+
+    def publish_detections(self, detections):
+        """Publish detection results"""
+        msg = Detection2DArray()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'camera_frame'
+
+        for det in detections:
+            detection = Detection2D()
+            # Fill in detection data
+            msg.detections.append(detection)
+
+        self.detection_pub.publish(msg)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ObjectDetectorNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+        `}</pre>
+        
+        <h2>🧠 LLMs کو ROS 2 کے ساتھ ضم کرنا</h2>
+        
+        <h3>مثال: وائس کمانڈ پروسیسر</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+import openai
+
+class VoiceCommandNode(Node):
+    def __init__(self):
+        super().__init__('voice_command_processor')
+
+        # Subscribe to speech recognition output
+        self.voice_sub = self.create_subscription(
+            String,
+            '/voice/recognized_text',
+            self.voice_callback,
+            10
+        )
+
+        # Publish movement commands
+        self.cmd_pub = self.create_publisher(
+            Twist,
+            '/cmd_vel',
+            10
+        )
+
+        self.get_logger().info('Voice Command Processor Ready')
+
+    def voice_callback(self, msg):
+        """Process voice commands using LLM"""
+        command_text = msg.data
+        self.get_logger().info(f'Received command: {command_text}')
+
+        # Use LLM to understand intent
+        robot_action = self.parse_command_with_llm(command_text)
+
+        # Execute action
+        self.execute_action(robot_action)
+
+    def parse_command_with_llm(self, text):
+        """Use LLM to parse natural language commands"""
+        prompt = f"""
+        You are a robot controller. Parse this command into a structured action:
+        Command: "{text}"
+
+        Return JSON with: {{action: "move/turn/stop", direction: "forward/backward/left/right", speed: 0-1}}
+        """
+
+        # Call OpenAI API (placeholder)
+        # response = openai.Completion.create(...)
+        # return parse_json(response)
+
+        return {"action": "move", "direction": "forward", "speed": 0.5}
+
+    def execute_action(self, action):
+        """Convert action to ROS command"""
+        cmd = Twist()
+
+        if action['action'] == 'move':
+            if action['direction'] == 'forward':
+                cmd.linear.x = action['speed']
+            elif action['direction'] == 'backward':
+                cmd.linear.x = -action['speed']
+        elif action['action'] == 'turn':
+            if action['direction'] == 'left':
+                cmd.angular.z = action['speed']
+            elif action['direction'] == 'right':
+                cmd.angular.z = -action['speed']
+
+        self.cmd_pub.publish(cmd)
+        self.get_logger().info(f'Executing: {action}')
+        `}</pre>
+        
+        <h2>🛠️ پیرامیٹرز کے ساتھ کام کرنا</h2>
+        
+        <p>پیرامیٹرز رن ٹائم کنفیگریشن کی اجازت دیتے ہیں:</p>
+        
+        <pre>{`
+class ConfigurableNode(Node):
+    def __init__(self):
+        super().__init__('configurable_node')
+
+        # Declare parameters with defaults
+        self.declare_parameter('update_rate', 10.0)
+        self.declare_parameter('robot_name', 'my_robot')
+        self.declare_parameter('enable_ai', True)
+
+        # Get parameter values
+        rate = self.get_parameter('update_rate').value
+        name = self.get_parameter('robot_name').value
+        ai_enabled = self.get_parameter('enable_ai').value
+
+        self.get_logger().info(f'Robot: {name}, Rate: {rate}Hz, AI: {ai_enabled}')
+
+        # Add parameter callback for dynamic updates
+        self.add_on_set_parameters_callback(self.parameter_callback)
+
+    def parameter_callback(self, params):
+        """Called when parameters change"""
+        for param in params:
+            self.get_logger().info(f'Parameter changed: {param.name} = {param.value}')
+        return True  # Accept changes
+        `}</pre>
+        
+        <p>رن ٹائم پر پیرامیٹرز سیٹ کریں:</p>
+        
+        <pre>{`
+# Set parameter via command line
+ros2 param set /configurable_node update_rate 20.0
+
+# Load from YAML file
+ros2 run my_package my_node --ros-args --params-file config.yaml
+        `}</pre>
+        
+        <h2>🚀 بہترین طریقے</h2>
+        
+        <h3>1. ملٹی تھریڈنگ کے لیے ایگزیکیوٹرز کا استعمال کریں</h3>
+        
+        <pre>{`
+from rclpy.executors import MultiThreadedExecutor
+
+def main():
+    rclpy.init()
+
+    node1 = SensorNode()
+    node2 = ControlNode()
+
+    executor = MultiThreadedExecutor()
+    executor.add_node(node1)
+    executor.add_node(node2)
+
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node1.destroy_node()
+        node2.destroy_node()
+        rclpy.shutdown()
+        `}</pre>
+        
+        <h3>2. لائف سائیکل کو صحیح طریقے سے ہینڈل کریں</h3>
+        
+        <pre>{`
+import signal
+
+class RobustNode(Node):
+    def __init__(self):
+        super().__init__('robust_node')
+        self.running = True
+
+        # Set up signal handler
+        signal.signal(signal.SIGINT, self.signal_handler)
+
+    def signal_handler(self, sig, frame):
+        self.get_logger().info('Shutting down gracefully...')
+        self.running = False
+
+    def cleanup(self):
+        """Cleanup resources"""
+        # Close connections, save state, etc.
+        pass
+        `}</pre>
+        
+        <h3>3. لاگنگ کے بہترین طریقے</h3>
+        
+        <pre>{`
+# Different log levels
+self.get_logger().debug('Detailed debug information')
+self.get_logger().info('General information')
+self.get_logger().warn('Warning message')
+self.get_logger().error('Error occurred')
+self.get_logger().fatal('Critical error')
+        `}</pre>
+        
+        <h2>🔗 انضمام کے نمونے</h2>
+        
+        <h3>پیٹرن 1: ادراک-منصوبہ بندی-کنٹرول</h3>
+        
+        <pre>
+[Camera] → [AI Detector] → [Path Planner] → [Motor Controller]
+        </pre>
+        
+        <h3>پیٹرن 2: سینسر فیوژن</h3>
+        
+        <pre>
+[Lidar] ↘
+[Camera] → [Fusion Node] → [SLAM] → [Navigation]
+[IMU]   ↗
+        </pre>
+        
+        <h3>پیٹرن 3: سلوک کا درخت (Behavior Tree)</h3>
+        
+        <pre>{`
+class BehaviorTreeNode(Node):
+    def __init__(self):
+        super().__init__('behavior_tree')
+        self.state = 'IDLE'
+
+        self.timer = self.create_timer(0.1, self.execute_behavior)
+
+    def execute_behavior(self):
+        if self.state == 'IDLE':
+            self.check_for_task()
+        elif self.state == 'NAVIGATING':
+            self.navigate_to_goal()
+        elif self.state == 'MANIPULATING':
+            self.perform_manipulation()
+        `}</pre>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ آپ Python AI کو ROS 2 کے ساتھ ضم کر سکتے ہیں، روبوٹ کے ڈھانچے کو بیان کرنے کے لیے <strong>URDF</strong> کے بارے میں جانیں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Bridging Python Agents with ROS 2</h1>
+      
+      <h2>🎯 Introduction</h2>
+      
+      <p>One of the most powerful aspects of ROS 2 is the ability to integrate <strong>Python-based AI agents</strong> with robotic systems. This chapter shows you how to use Python, <code>rclpy</code>, and modern AI libraries to create intelligent robot controllers.</p>
+      
+      <h2>🐍 Why Python for Robotics?</h2>
+      
+      <p>Python is ideal for robotics AI because:</p>
+      
+      <ul>
+        <li>✅ <strong>Rich AI Ecosystem</strong>: TensorFlow, PyTorch, scikit-learn</li>
+        <li>✅ <strong>Rapid Prototyping</strong>: Quick iteration on algorithms</li>
+        <li>✅ <strong>Easy Integration</strong>: Seamless with ROS 2 via rclpy</li>
+        <li>✅ <strong>Community</strong>: Vast libraries and resources</li>
+        <li>⚠️ <strong>Performance Trade-off</strong>: Use C++ for real-time critical paths</li>
+      </ul>
+      
+      <h2>🔌 The rclpy Library</h2>
+      
+      <p><code>rclpy</code> is the Python client library for ROS 2. It provides:</p>
+      
+      <ul>
+        <li>Node creation and management</li>
+        <li>Publishers, Subscribers, Services, Actions</li>
+        <li>Parameters and logging</li>
+        <li>Timers and executors</li>
+      </ul>
+      
+      <h3>Installation</h3>
+      
+      <pre>{`
+# Usually installed with ROS 2
+sudo apt install python3-rclpy
+
+# Additional useful packages
+sudo apt install python3-sensor-msgs python3-geometry-msgs
+      `}</pre>
+      
+      <h2>🤖 Creating an AI-Powered Node</h2>
+      
+      <h3>Example: Object Detection Node</h3>
+      
+      <p>This example integrates a simple AI model with ROS 2:</p>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from vision_msgs.msg import Detection2DArray, Detection2D
+from cv_bridge import CvBridge
+import cv2
+import numpy as np
+
+class ObjectDetectorNode(Node):
+    def __init__(self):
+        super().__init__('object_detector')
+
+        # Declare parameters
+        self.declare_parameter('confidence_threshold', 0.5)
+        self.declare_parameter('model_path', '/path/to/model.pt')
+
+        # Create CV Bridge
+        self.bridge = CvBridge()
+
+        # Subscribe to camera feed
+        self.image_sub = self.create_subscription(
+            Image,
+            '/camera/image_raw',
+            self.image_callback,
+            10
+        )
+
+        # Publish detections
+        self.detection_pub = self.create_publisher(
+            Detection2DArray,
+            '/detected_objects',
+            10
+        )
+
+        # Load AI model (placeholder - use your actual model)
+        self.model = self.load_model()
+
+        self.get_logger().info('Object Detector Node Initialized')
+
+    def load_model(self):
+        """Load your AI model here (PyTorch, TensorFlow, etc.)"""
+        model_path = self.get_parameter('model_path').value
+        # model = torch.load(model_path)
+        # return model
+        return None  # Placeholder
+
+    def image_callback(self, msg):
+        """Process incoming images"""
+        try:
+            # Convert ROS Image to OpenCV
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+
+            # Run detection
+            detections = self.detect_objects(cv_image)
+
+            # Publish detections
+            self.publish_detections(detections)
+
+        except Exception as e:
+            self.get_logger().error(f'Error processing image: {str(e)}')
+
+    def detect_objects(self, image):
+        """Run AI model inference"""
+        # Preprocess image
+        # input_tensor = self.preprocess(image)
+
+        # Run model
+        # with torch.no_grad():
+        #     predictions = self.model(input_tensor)
+
+        # Post-process results
+        # detections = self.postprocess(predictions)
+
+        # Placeholder return
+        return []
+
+    def publish_detections(self, detections):
+        """Publish detection results"""
+        msg = Detection2DArray()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = 'camera_frame'
+
+        for det in detections:
+            detection = Detection2D()
+            # Fill in detection data
+            msg.detections.append(detection)
+
+        self.detection_pub.publish(msg)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ObjectDetectorNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+      `}</pre>
+      
+      <h2>🧠 Integrating LLMs with ROS 2</h2>
+      
+      <h3>Example: Voice Command Processor</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+import openai
+
+class VoiceCommandNode(Node):
+    def __init__(self):
+        super().__init__('voice_command_processor')
+
+        # Subscribe to speech recognition output
+        self.voice_sub = self.create_subscription(
+            String,
+            '/voice/recognized_text',
+            self.voice_callback,
+            10
+        )
+
+        # Publish movement commands
+        self.cmd_pub = self.create_publisher(
+            Twist,
+            '/cmd_vel',
+            10
+        )
+
+        self.get_logger().info('Voice Command Processor Ready')
+
+    def voice_callback(self, msg):
+        """Process voice commands using LLM"""
+        command_text = msg.data
+        self.get_logger().info(f'Received command: {command_text}')
+
+        # Use LLM to understand intent
+        robot_action = self.parse_command_with_llm(command_text)
+
+        # Execute action
+        self.execute_action(robot_action)
+
+    def parse_command_with_llm(self, text):
+        """Use LLM to parse natural language commands"""
+        prompt = f"""
+        You are a robot controller. Parse this command into a structured action:
+        Command: "{text}"
+
+        Return JSON with: {{action: "move/turn/stop", direction: "forward/backward/left/right", speed: 0-1}}
+        """
+
+        # Call OpenAI API (placeholder)
+        # response = openai.Completion.create(...)
+        # return parse_json(response)
+
+        return {"action": "move", "direction": "forward", "speed": 0.5}
+
+    def execute_action(self, action):
+        """Convert action to ROS command"""
+        cmd = Twist()
+
+        if action['action'] == 'move':
+            if action['direction'] == 'forward':
+                cmd.linear.x = action['speed']
+            elif action['direction'] == 'backward':
+                cmd.linear.x = -action['speed']
+        elif action['action'] == 'turn':
+            if action['direction'] == 'left':
+                cmd.angular.z = action['speed']
+            elif action['direction'] == 'right':
+                cmd.angular.z = -action['speed']
+
+        self.cmd_pub.publish(cmd)
+        self.get_logger().info(f'Executing: {action}')
+      `}</pre>
+      
+      <h2>🛠️ Working with Parameters</h2>
+      
+      <p>Parameters allow runtime configuration:</p>
+      
+      <pre>{`
+class ConfigurableNode(Node):
+    def __init__(self):
+        super().__init__('configurable_node')
+
+        # Declare parameters with defaults
+        self.declare_parameter('update_rate', 10.0)
+        self.declare_parameter('robot_name', 'my_robot')
+        self.declare_parameter('enable_ai', True)
+
+        # Get parameter values
+        rate = self.get_parameter('update_rate').value
+        name = self.get_parameter('robot_name').value
+        ai_enabled = self.get_parameter('enable_ai').value
+
+        self.get_logger().info(f'Robot: {name}, Rate: {rate}Hz, AI: {ai_enabled}')
+
+        # Add parameter callback for dynamic updates
+        self.add_on_set_parameters_callback(self.parameter_callback)
+
+    def parameter_callback(self, params):
+        """Called when parameters change"""
+        for param in params:
+            self.get_logger().info(f'Parameter changed: {param.name} = {param.value}')
+        return True  # Accept changes
+      `}</pre>
+      
+      <p>Set parameters at runtime:</p>
+      
+      <pre>{`
+# Set parameter via command line
+ros2 param set /configurable_node update_rate 20.0
+
+# Load from YAML file
+ros2 run my_package my_node --ros-args --params-file config.yaml
+      `}</pre>
+      
+      <h2>🚀 Best Practices</h2>
+      
+      <h3>1. Use Executors for Multi-threading</h3>
+      
+      <pre>{`
+from rclpy.executors import MultiThreadedExecutor
+
+def main():
+    rclpy.init()
+
+    node1 = SensorNode()
+    node2 = ControlNode()
+
+    executor = MultiThreadedExecutor()
+    executor.add_node(node1)
+    executor.add_node(node2)
+
+    try:
+        executor.spin()
+    finally:
+        executor.shutdown()
+        node1.destroy_node()
+        node2.destroy_node()
+        rclpy.shutdown()
+      `}</pre>
+      
+      <h3>2. Handle Lifecycle Properly</h3>
+      
+      <pre>{`
+import signal
+
+class RobustNode(Node):
+    def __init__(self):
+        super().__init__('robust_node')
+        self.running = True
+
+        # Set up signal handler
+        signal.signal(signal.SIGINT, self.signal_handler)
+
+    def signal_handler(self, sig, frame):
+        self.get_logger().info('Shutting down gracefully...')
+        self.running = False
+
+    def cleanup(self):
+        """Cleanup resources"""
+        # Close connections, save state, etc.
+        pass
+      `}</pre>
+      
+      <h3>3. Logging Best Practices</h3>
+      
+      <pre>{`
+# Different log levels
+self.get_logger().debug('Detailed debug information')
+self.get_logger().info('General information')
+self.get_logger().warn('Warning message')
+self.get_logger().error('Error occurred')
+self.get_logger().fatal('Critical error')
+      `}</pre>
+      
+      <h2>🔗 Integration Patterns</h2>
+      
+      <h3>Pattern 1: Perception-Planning-Control</h3>
+      
+      <pre>
+[Camera] → [AI Detector] → [Path Planner] → [Motor Controller]
+      </pre>
+      
+      <h3>Pattern 2: Sensor Fusion</h3>
+      
+      <pre>
+[Lidar] ↘
+[Camera] → [Fusion Node] → [SLAM] → [Navigation]
+[IMU]   ↗
+      </pre>
+      
+      <h3>Pattern 3: Behavior Tree</h3>
+      
+      <pre>{`
+class BehaviorTreeNode(Node):
+    def __init__(self):
+        super().__init__('behavior_tree')
+        self.state = 'IDLE'
+
+        self.timer = self.create_timer(0.1, self.execute_behavior)
+
+    def execute_behavior(self):
+        if self.state == 'IDLE':
+            self.check_for_task()
+        elif self.state == 'NAVIGATING':
+            self.navigate_to_goal()
+        elif self.state == 'MANIPULATING':
+            self.perform_manipulation()
+      `}</pre>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that you can integrate Python AI with ROS 2, learn about <strong>URDF</strong> for describing robot structures →</p>
+    </div>
+  );
+}

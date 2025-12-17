@@ -1,0 +1,26 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Module3Overview() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ماڈیول 3: AI-روبوٹ دماغ (NVIDIA Isaac™)</h1>
+        <p>یہ ماڈیول NVIDIA Isaac پلیٹ فارم پر مرکوز ہے۔ ہم Isaac Sim، Isaac Gym برائے کمک سیکھنے (Reinforcement Learning)، اور Omniverse Replicator برائے مصنوعی ڈیٹا جنریشن کا احاطہ کریں گے۔</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Module 3: The AI-Robot Brain (NVIDIA Isaac™)</h1>
+      <p>This module focuses on the NVIDIA Isaac platform. We will cover Isaac Sim, Isaac Gym for Reinforcement Learning, and Omniverse Replicator for synthetic data generation.</p>
+    </div>
+  );
+}

@@ -1,0 +1,226 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Module1Overview() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ماڈیول 1: روبوٹک اعصابی نظام (ROS 2)</h1>
+        
+        <h2>🎯 ماڈیول کا جائزہ</h2>
+        
+        <p>ماڈیول 1 میں خوش آمدید، جہاں آپ <strong>ROS 2 (Robot Operating System 2)</strong> کے بارے میں سیکھیں گے—وہ مڈل ویئر جو جدید روبوٹس کے لیے مواصلاتی ریڑھ کی ہڈی کا کام کرتا ہے۔ ROS 2 کو روبوٹ کے اعصابی نظام کے طور پر سمجھیں، جو مختلف اجزاء کو آسانی سے بات چیت اور ہم آہنگی کرنے کے قابل بناتا ہے۔</p>
+        
+        <h2>🌟 ROS 2 کیوں؟</h2>
+        
+        <p>ROS 2 روبوٹکس کی ترقی کے لیے صنعت کا معیاری مڈل ویئر ہے۔ یہ فراہم کرتا ہے:</p>
+        
+        <ul>
+          <li><strong>غیر جڑے ہوئے فن تعمیر</strong>: آزاد، دوبارہ قابل استعمال نوڈز میں خدشات کو الگ کریں</li>
+          <li><strong>زبان سے آزاد</strong>: Python، C++، یا دیگر معاون زبانوں میں نوڈز لکھیں</li>
+          <li><strong>تقسیم شدہ کمپیوٹنگ</strong>: متعدد مشینوں پر نوڈز چلائیں</li>
+          <li><strong>حقیقی وقت کی صلاحیتیں</strong>: روبوٹکس ایپلیکیشنز کے لیے اہم</li>
+          <li><strong>سیکیورٹی</strong>: پروڈکشن تعیناتی کے لیے بلٹ ان سیکیورٹی خصوصیات</li>
+        </ul>
+        
+        <h2>📚 آپ کیا سیکھیں گے</h2>
+        
+        <p>اس ماڈیول میں، آپ مہارت حاصل کریں گے:</p>
+        
+        <h3>1. ROS 2 بنیادی باتیں</h3>
+        <ul>
+          <li>ROS 2 فن تعمیر اور ڈیزائن فلسفہ</li>
+          <li>تنصیب اور ماحولیات کی ترتیب</li>
+          <li>بنیادی تصورات: ورک اسپیس، پیکجز، اور بلڈ سسٹم</li>
+        </ul>
+        
+        <h3>2. مواصلاتی طریقہ کار</h3>
+        <ul>
+          <li><strong>نوڈز</strong>: بنیادی کمپیوٹنگ یونٹس</li>
+          <li><strong>ٹاپکس</strong>: ڈیٹا سٹریمز کے لیے publish-subscribe پیٹرن</li>
+          <li><strong>سروسز</strong>: ہم وقت کارروائیوں کے لیے request-response پیٹرن</li>
+          <li><strong>ایکشنز</strong>: طویل مدتی، قابل منسوخی کاموں کے لیے</li>
+        </ul>
+        
+        <h3>3. Python انضمام</h3>
+        <ul>
+          <li>Python نوڈز بنانے کے لیے <code>rclpy</code> کا استعمال</li>
+          <li>ROS 2 کنٹرولرز کے ساتھ AI ایجنٹس کو جوڑنا</li>
+          <li>Python پر مبنی روبوٹکس کے لیے بہترین طریقے</li>
+        </ul>
+        
+        <h3>4. روبوٹ تفصیل (URDF)</h3>
+        <ul>
+          <li>URDF (Unified Robot Description Format) کو سمجھنا</li>
+          <li>ہیومنائیڈ روبوٹ کی ساخت کی تفصیل</li>
+          <li>لنکس، جوائنٹس، اور کائنیمیٹک چینز</li>
+          <li>تصور اور توثیق</li>
+        </ul>
+        
+        <h2>🎯 سیکھنے کے مقاصد</h2>
+        
+        <p>اس ماڈیول کے اختتام تک، آپ قابل ہوں گے:</p>
+        
+        <ul>
+          <li>✅ ROS 2 ڈیولپمنٹ ماحول ترتیب دینا</li>
+          <li>✅ ROS 2 نوڈز بنانا اور منظم کرنا</li>
+          <li>✅ ٹاپکس کے ساتھ pub/sub مواصلات نافذ کرنا</li>
+          <li>✅ ہم وقت مواصلات کے لیے سروسز استعمال کرنا</li>
+          <li>✅ ROS 2 کے ساتھ Python پر مبنی AI ایجنٹس کو مربوط کرنا</li>
+          <li>✅ URDF استعمال کرتے ہوئے روبوٹ کی ساخت ڈیزائن اور بیان کرنا</li>
+          <li>✅ RViz2 میں روبوٹس کی تصویر کشی کرنا</li>
+        </ul>
+        
+        <h2>💡 عملی ایپلیکیشنز</h2>
+        
+        <p>یہاں سیکھی گئی مہارتیں آپ کو قابل بنائیں گی:</p>
+        
+        <ul>
+          <li>ماڈیولر، قابل دیکھ بھال روبوٹک سسٹم بنانا</li>
+          <li>سینسرز اور actuators کو مربوط کرنا</li>
+          <li>دوبارہ قابل استعمال سافٹ ویئر اجزاء بنانا</li>
+          <li>تقسیم شدہ روبوٹ ایپلیکیشنز تیار کرنا</li>
+          <li>شبیہ سازی اور حقیقی دنیا کی تعیناتی کے لیے روبوٹس تیار کرنا</li>
+        </ul>
+        
+        <h2>🚀 ماڈیول ٹائم لائن</h2>
+        
+        <p>یہ ماڈیول کورس کے <strong>ہفتے 3-5</strong> کا احاطہ کرتا ہے:</p>
+        
+        <ul>
+          <li><strong>ہفتہ 3</strong>: ROS 2 فن تعمیر اور بنیادی تصورات</li>
+          <li><strong>ہفتہ 4</strong>: نوڈز، ٹاپکس، سروسز، اور ایکشنز</li>
+          <li><strong>ہفتہ 5</strong>: Python انضمام اور URDF</li>
+        </ul>
+        
+        <h2>📖 پیشگی ضروریات</h2>
+        
+        <p>اس ماڈیول کو شروع کرنے سے پہلے، آپ کے پاس ہونا چاہیے:</p>
+        
+        <ul>
+          <li>بنیادی Python پروگرامنگ کا علم</li>
+          <li>کمانڈ لائن انٹرفیس سے واقفیت (Linux/Ubuntu)</li>
+          <li>بنیادی نیٹ ورکنگ تصورات کی سمجھ</li>
+          <li>کورس تعارف مکمل کیا ہو</li>
+        </ul>
+        
+        <h2>🎬 آئیے شروع کریں!</h2>
+        
+        <p>روبوٹک مڈل ویئر میں اپنی بنیاد بنانے کے لیے <strong>ROS 2 بنیادی باتیں</strong> سے شروع کریں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Module 1: The Robotic Nervous System (ROS 2)</h1>
+      
+      <h2>🎯 Module Overview</h2>
+      
+      <p>Welcome to Module 1, where you'll learn about <strong>ROS 2 (Robot Operating System 2)</strong>—the middleware that serves as the communication backbone for modern robots. Think of ROS 2 as the nervous system of a robot, enabling different components to communicate and coordinate seamlessly.</p>
+      
+      <h2>🌟 Why ROS 2?</h2>
+      
+      <p>ROS 2 is the industry-standard middleware for robotics development. It provides:</p>
+      
+      <ul>
+        <li><strong>Decoupled Architecture</strong>: Separate concerns into independent, reusable nodes</li>
+        <li><strong>Language Agnostic</strong>: Write nodes in Python, C++, or other supported languages</li>
+        <li><strong>Distributed Computing</strong>: Run nodes across multiple machines</li>
+        <li><strong>Real-time Capabilities</strong>: Critical for robotics applications</li>
+        <li><strong>Security</strong>: Built-in security features for production deployments</li>
+      </ul>
+      
+      <h2>📚 What You'll Learn</h2>
+      
+      <p>In this module, you will master:</p>
+      
+      <h3>1. ROS 2 Fundamentals</h3>
+      <ul>
+        <li>ROS 2 architecture and design philosophy</li>
+        <li>Installation and environment setup</li>
+        <li>Core concepts: workspace, packages, and build systems</li>
+      </ul>
+      
+      <h3>2. Communication Mechanisms</h3>
+      <ul>
+        <li><strong>Nodes</strong>: The fundamental computing units</li>
+        <li><strong>Topics</strong>: Publish-subscribe pattern for data streams</li>
+        <li><strong>Services</strong>: Request-response pattern for synchronous operations</li>
+        <li><strong>Actions</strong>: For long-running, preemptible tasks</li>
+      </ul>
+      
+      <h3>3. Python Integration</h3>
+      <ul>
+        <li>Using <code>rclpy</code> to create Python nodes</li>
+        <li>Bridging AI agents with ROS 2 controllers</li>
+        <li>Best practices for Python-based robotics</li>
+      </ul>
+      
+      <h3>4. Robot Description (URDF)</h3>
+      <ul>
+        <li>Understanding URDF (Unified Robot Description Format)</li>
+        <li>Describing humanoid robot structure</li>
+        <li>Links, joints, and kinematic chains</li>
+        <li>Visualization and validation</li>
+      </ul>
+      
+      <h2>🎯 Learning Objectives</h2>
+      
+      <p>By the end of this module, you will be able to:</p>
+      
+      <ul>
+        <li>✅ Set up a ROS 2 development environment</li>
+        <li>✅ Create and manage ROS 2 nodes</li>
+        <li>✅ Implement pub/sub communication with topics</li>
+        <li>✅ Use services for synchronous communication</li>
+        <li>✅ Integrate Python-based AI agents with ROS 2</li>
+        <li>✅ Design and describe robot structures using URDF</li>
+        <li>✅ Visualize robots in RViz2</li>
+      </ul>
+      
+      <h2>💡 Practical Applications</h2>
+      
+      <p>The skills you learn here will enable you to:</p>
+      
+      <ul>
+        <li>Build modular, maintainable robotic systems</li>
+        <li>Integrate sensors and actuators</li>
+        <li>Create reusable software components</li>
+        <li>Develop distributed robot applications</li>
+        <li>Prepare robots for simulation and real-world deployment</li>
+      </ul>
+      
+      <h2>🚀 Module Timeline</h2>
+      
+      <p>This module covers <strong>Weeks 3-5</strong> of the course:</p>
+      
+      <ul>
+        <li><strong>Week 3</strong>: ROS 2 architecture and core concepts</li>
+        <li><strong>Week 4</strong>: Nodes, topics, services, and actions</li>
+        <li><strong>Week 5</strong>: Python integration and URDF</li>
+      </ul>
+      
+      <h2>📖 Prerequisites</h2>
+      
+      <p>Before starting this module, you should have:</p>
+      
+      <ul>
+        <li>Basic Python programming knowledge</li>
+        <li>Familiarity with command-line interfaces (Linux/Ubuntu)</li>
+        <li>Understanding of basic networking concepts</li>
+        <li>Completed the course introduction</li>
+      </ul>
+      
+      <h2>🎬 Let's Begin!</h2>
+      
+      <p>Start with <strong>ROS 2 Fundamentals</strong> to build your foundation in robotic middleware →</p>
+    </div>
+  );
+}

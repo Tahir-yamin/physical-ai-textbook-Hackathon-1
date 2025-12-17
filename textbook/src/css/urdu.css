@@ -1,0 +1,32 @@
+/* Urdu-specific styles */
+[lang="ur-PK"] {
+    font-family: 'Noto Nastaliq Urdu', 'Gulzar', serif !important;
+}
+
+[lang="ur-PK"] h1,
+[lang="ur-PK"] h2,
+[lang="ur-PK"] h3,
+[lang="ur-PK"] h4,
+[lang="ur-PK"] h5,
+[lang="ur-PK"] h6 {
+    font-family: 'Noto Nastaliq Urdu', 'Gulzar', serif !important;
+    font-weight: 700;
+}
+
+[lang="ur-PK"] .navbar__title,
+[lang="ur-PK"] .menu__link {
+    font-family: 'Noto Nastaliq Urdu', 'Gulzar', serif !important;
+}
+
+/* Better Urdu text rendering */
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] .navbar__items {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .menu {
+    text-align: right;
+}

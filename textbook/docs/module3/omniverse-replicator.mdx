@@ -1,0 +1,164 @@
+---
+sidebar_position: 4
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function OmniverseReplicator() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Replicator کے ساتھ مصنوعی ڈیٹا (Synthetic Data)</h1>
+        
+        <h2>🎯 مصنوعی ڈیٹا کیوں؟</h2>
+        
+        <p>کمپیوٹر ویژن ماڈلز کو تربیت دینے کے لیے ہزاروں لیبل شدہ تصاویر کی ضرورت ہوتی ہے۔ حقیقی دنیا میں ڈیٹا اکٹھا کرنا اور لیبل لگانا سست اور مہنگا ہے۔ <strong>Omniverse Replicator</strong> آپ کو خودکار طور پر کامل لیبلز کے ساتھ فوٹو ریئلسٹک مصنوعی ڈیٹا تیار کرنے کی اجازت دیتا ہے۔</p>
+        
+        <h2>🏗️ Replicator پائپ لائن</h2>
+        
+        <ol>
+          <li><strong>منظر (Scene)</strong>: 3D اثاثے لوڈ کریں۔</li>
+          <li><strong>رینڈمائزیشن (Randomization)</strong>: روشنی، ساخت، اور کیمرے کی پوزیشن کو تبدیل کریں۔</li>
+          <li><strong>تشریح (Annotation)</strong>: خودکار طور پر باؤنڈنگ بکس اور سیگمنٹیشن ماسک بنائیں۔</li>
+          <li><strong>رائٹر (Writer)</strong>: ڈیٹا کو ڈسک پر محفوظ کریں۔</li>
+        </ol>
+        
+        <h2>💻 Python اسکرپٹ کی مثال</h2>
+        
+        <p>یہاں ایک سادہ اسکرپٹ ہے جو بے ترتیب اشیاء کے ساتھ ڈیٹا تیار کرتا ہے:</p>
+        
+        <pre>{`
+import omni.replicator.core as rep
+
+with rep.new_layer():
+    # Add a camera
+    camera = rep.create.camera(position=(0, 500, 1000), look_at=(0, 0, 0))
+    render_product = rep.create.render_product(camera, (1024, 1024))
+
+    # Add objects (e.g., cones)
+    cones = rep.create.cone(count=10, position=rep.distribution.uniform((-500, 0, -500), (500, 0, 500)))
+
+    # Randomize position and color
+    with rep.trigger.on_frame(num_frames=100):
+        with cones:
+            rep.randomizer.scatter_2d()
+            rep.randomizer.color(colors=rep.distribution.uniform((0, 0, 0), (1, 1, 1)))
+
+    # Initialize writer (KITTI format)
+    writer = rep.WriterRegistry.get("KittiWriter")
+    writer.initialize(output_dir="_output_data", rgb=True, bounding_box_2d_tight=True)
+    writer.attach([render_product])
+
+    # Run generation
+    rep.orchestrator.run()
+        `}</pre>
+        
+        <h2>📊 تشریح کی اقسام (Annotation Types)</h2>
+        
+        <p>Replicator مختلف قسم کے گراؤنڈ ٹروتھ (Ground Truth) تیار کر سکتا ہے:</p>
+        
+        <ul>
+          <li><strong>RGB</strong>: معیاری رنگین تصویر۔</li>
+          <li><strong>Bounding Box 2D/3D</strong>: آبجیکٹ کا پتہ لگانے کے لیے۔</li>
+          <li><strong>Semantic Segmentation</strong>: پکسل کی سطح کی درجہ بندی۔</li>
+          <li><strong>Instance Segmentation</strong>: انفرادی اشیاء کی شناخت۔</li>
+          <li><strong>Depth</strong>: کیمرے سے فاصلہ۔</li>
+        </ul>
+        
+        <h2>🛠️ ڈومین رینڈمائزیشن (Domain Randomization)</h2>
+        
+        <p>مصنوعی ڈیٹا کو حقیقی دنیا میں کام کرنے کے لیے، آپ کو ڈومین کو بے ترتیب کرنا ہوگا:</p>
+        
+        <ul>
+          <li><strong>Distractors</strong>: پس منظر میں بے ترتیب اشیاء شامل کریں۔</li>
+          <li><strong>Textures</strong>: مواد اور رنگ تبدیل کریں۔</li>
+          <li><strong>Lighting</strong>: روشنی کی شدت اور پوزیشن کو تبدیل کریں۔</li>
+          <li><strong>Camera Pose</strong>: کیمرے کا زاویہ تبدیل کریں۔</li>
+        </ul>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>مبارک ہو! آپ نے ماڈیول 3 مکمل کر لیا ہے۔ اب آپ کے پاس ڈیٹا اور نقلی ٹولز ہیں۔ اگلا، <strong>ماڈیول 4: وائس ٹو ایکشن</strong> میں سیکھیں کہ روبوٹس سے کیسے بات کی جائے →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Synthetic Data with Replicator</h1>
+      
+      <h2>🎯 Why Synthetic Data?</h2>
+      
+      <p>Training computer vision models requires thousands of labeled images. Collecting and labeling data in the real world is slow and expensive. <strong>Omniverse Replicator</strong> allows you to automatically generate photorealistic synthetic data with perfect labels.</p>
+      
+      <h2>🏗️ Replicator Pipeline</h2>
+      
+      <ol>
+        <li><strong>Scene</strong>: Load 3D assets.</li>
+        <li><strong>Randomization</strong>: Vary lighting, textures, and camera position.</li>
+        <li><strong>Annotation</strong>: Automatically generate bounding boxes and segmentation masks.</li>
+        <li><strong>Writer</strong>: Save data to disk.</li>
+      </ol>
+      
+      <h2>💻 Python Script Example</h2>
+      
+      <p>Here is a simple script that generates data with random objects:</p>
+      
+      <pre>{`
+import omni.replicator.core as rep
+
+with rep.new_layer():
+    # Add a camera
+    camera = rep.create.camera(position=(0, 500, 1000), look_at=(0, 0, 0))
+    render_product = rep.create.render_product(camera, (1024, 1024))
+
+    # Add objects (e.g., cones)
+    cones = rep.create.cone(count=10, position=rep.distribution.uniform((-500, 0, -500), (500, 0, 500)))
+
+    # Randomize position and color
+    with rep.trigger.on_frame(num_frames=100):
+        with cones:
+            rep.randomizer.scatter_2d()
+            rep.randomizer.color(colors=rep.distribution.uniform((0, 0, 0), (1, 1, 1)))
+
+    # Initialize writer (KITTI format)
+    writer = rep.WriterRegistry.get("KittiWriter")
+    writer.initialize(output_dir="_output_data", rgb=True, bounding_box_2d_tight=True)
+    writer.attach([render_product])
+
+    # Run generation
+    rep.orchestrator.run()
+      `}</pre>
+      
+      <h2>📊 Annotation Types</h2>
+      
+      <p>Replicator can generate various types of ground truth:</p>
+      
+      <ul>
+        <li><strong>RGB</strong>: Standard color image.</li>
+        <li><strong>Bounding Box 2D/3D</strong>: For object detection.</li>
+        <li><strong>Semantic Segmentation</strong>: Pixel-level classification.</li>
+        <li><strong>Instance Segmentation</strong>: Identifying individual objects.</li>
+        <li><strong>Depth</strong>: Distance from camera.</li>
+      </ul>
+      
+      <h2>🛠️ Domain Randomization</h2>
+      
+      <p>To make synthetic data work in the real world, you must randomize the domain:</p>
+      
+      <ul>
+        <li><strong>Distractors</strong>: Add random objects in the background.</li>
+        <li><strong>Textures</strong>: Change materials and colors.</li>
+        <li><strong>Lighting</strong>: Vary light intensity and position.</li>
+        <li><strong>Camera Pose</strong>: Change camera angle.</li>
+      </ul>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Congratulations! You've completed Module 3. You now have the data and simulation tools. Next, learn how to talk to robots in <strong>Module 4: Voice-to-Action</strong> →</p>
+    </div>
+  );
+}

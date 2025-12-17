@@ -1,0 +1,55 @@
+# Physical AI Textbook - Root .gitignore
+
+# Environment variables (CRITICAL - Contains API keys)
+**/.env
+**/.env.*
+.env
+.env.local
+.env.development
+.env.test  
+.env.production
+textbook/backend/.env
+
+# Dependencies
+**/node_modules/
+node_modules/
+
+# Build outputs
+**/build/
+**/dist/
+**/.docusaurus/
+**/.cache-loader/
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/*.so
+.Python
+**/venv/
+**/ENV/
+**/env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+**/*.log
+logs/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp

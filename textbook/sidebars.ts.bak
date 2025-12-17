@@ -1,0 +1,129 @@
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+import i18n from './src/i18n/config';
+
+// Sidebar translations
+const sidebarTranslations = {
+  en: {
+    intro: 'Introduction',
+    module1: 'Module 1: The Robotic Nervous System (ROS 2)',
+    module1Overview: 'Overview',
+    module1Ros2: 'ROS 2 Fundamentals',
+    module1Nodes: 'Nodes, Topics & Services',
+    module1Python: 'Python Integration',
+    module1Urdf: 'URDF for Humanoids',
+    module2: 'Module 2: The Digital Twin (Gazebo & Unity)',
+    module2Overview: 'Overview',
+    module2Gazebo: 'Gazebo Simulation',
+    module2Unity: 'Unity Integration',
+    module2Sensor: 'Sensor Simulation',
+    module3: 'Module 3: The AI-Robot Brain (NVIDIA Isaac™)',
+    module3Overview: 'Overview',
+    module3IsaacSim: 'Isaac Sim Setup',
+    module3IsaacGym: 'Isaac Gym RL',
+    module3Replicator: 'Synthetic Data (Replicator)',
+    module4: 'Module 4: Voice-to-Action (VLA)',
+    module4Overview: 'Overview',
+    module4Whisper: 'Speech Recognition (Whisper)',
+    module4Llm: 'Intent Parsing (LLM)',
+    module4Pipeline: 'Voice Pipeline',
+    resources: 'Resources',
+    resourcesCheatsheet: 'ROS 2 Cheatsheet',
+    resourcesPython: 'Python API Reference',
+    resourcesTroubleshooting: 'Troubleshooting',
+  },
+  ur: {
+    intro: 'تعارف',
+    module1: 'ماڈیول 1: روبوٹک اعصابی نظام (ROS 2)',
+    module1Overview: 'جائزہ',
+    module1Ros2: 'ROS 2 بنیادی باتیں',
+    module1Nodes: 'نوڈز، ٹاپکس اور سروسز',
+    module1Python: 'Python انضمام',
+    module1Urdf: 'ہیومنائیڈز کے لیے URDF',
+    module2: 'ماڈیول 2: ڈیجیٹل ٹوئن (Gazebo اور Unity)',
+    module2Overview: 'جائزہ',
+    module2Gazebo: 'Gazebo شبیہ سازی',
+    module2Unity: 'Unity انضمام',
+    module2Sensor: 'سینسر شبیہ سازی',
+    module3: 'ماڈیول 3: AI-روبوٹ دماغ (NVIDIA Isaac™)',
+    module3Overview: 'جائزہ',
+    module3IsaacSim: 'Isaac Sim سیٹ اپ',
+    module3IsaacGym: 'Isaac Gym RL',
+    module3Replicator: 'مصنوعی ڈیٹا (Replicator)',
+    module4: 'ماڈیول 4: Voice-to-Action (VLA)',
+    module4Overview: 'جائزہ',
+    module4Whisper: 'تقریر کی شناخت (Whisper)',
+    module4Llm: 'ارادے کی تجزیہ (LLM)',
+    module4Pipeline: 'وائس پائپ لائن',
+    resources: 'وسائل',
+    resourcesCheatsheet: 'ROS 2 چیٹ شیٹ',
+    resourcesPython: 'Python API حوالہ',
+    resourcesTroubleshooting: 'خرابیوں کا سراغ لگانا',
+  },
+};
+
+const t = (key: string) => {
+  const lang = i18n.language || 'en';
+  return sidebarTranslations[lang]?.[key] || sidebarTranslations.en[key] || key;
+};
+
+const sidebars: SidebarsConfig = {
+  tutorialSidebar: [
+    {
+      type: 'doc',
+      id: 'intro',
+      label: t('intro'),
+    },
+    {
+      type: 'category',
+      label: t('module1'),
+      items: [
+        { type: 'doc', id: 'module1/overview', label: t('module1Overview') },
+        { type: 'doc', id: 'module1/ros2-fundamentals', label: t('module1Ros2') },
+        { type: 'doc', id: 'module1/nodes-topics-services', label: t('module1Nodes') },
+        { type: 'doc', id: 'module1/python-integration', label: t('module1Python') },
+        { type: 'doc', id: 'module1/urdf', label: t('module1Urdf') },
+      ],
+    },
+    {
+      type: 'category',
+      label: t('module2'),
+      items: [
+        { type: 'doc', id: 'module2/overview', label: t('module2Overview') },
+        { type: 'doc', id: 'module2/gazebo-simulation', label: t('module2Gazebo') },
+        { type: 'doc', id: 'module2/unity-integration', label: t('module2Unity') },
+        { type: 'doc', id: 'module2/sensor-simulation', label: t('module2Sensor') },
+      ],
+    },
+    {
+      type: 'category',
+      label: t('module3'),
+      items: [
+        { type: 'doc', id: 'module3/overview', label: t('module3Overview') },
+        { type: 'doc', id: 'module3/isaac-sim-setup', label: t('module3IsaacSim') },
+        { type: 'doc', id: 'module3/isaac-gym-rl', label: t('module3IsaacGym') },
+        { type: 'doc', id: 'module3/omniverse-replicator', label: t('module3Replicator') },
+      ],
+    },
+    {
+      type: 'category',
+      label: t('module4'),
+      items: [
+        { type: 'doc', id: 'module4/overview', label: t('module4Overview') },
+        { type: 'doc', id: 'module4/whisper-integration', label: t('module4Whisper') },
+        { type: 'doc', id: 'module4/llm-action-parsing', label: t('module4Llm') },
+        { type: 'doc', id: 'module4/voice-command-pipeline', label: t('module4Pipeline') },
+      ],
+    },
+    {
+      type: 'category',
+      label: t('resources'),
+      items: [
+        { type: 'doc', id: 'resources/ros2-cheatsheet', label: t('resourcesCheatsheet') },
+        { type: 'doc', id: 'resources/python-api-reference', label: t('resourcesPython') },
+        { type: 'doc', id: 'resources/troubleshooting', label: t('resourcesTroubleshooting') },
+      ],
+    },
+  ],
+};
+
+export default sidebars;

@@ -1,0 +1,30 @@
+{
+    "theme.ErrorPageContent.title": {
+        "message": "یہ صفحہ کریش ہو گیا۔",
+        "description": "The title of the fallback page when the page crashed"
+    },
+    "theme.NotFound.title": {
+        "message": "صفحہ نہیں ملا",
+        "description": "The title of the 404 page"
+    },
+    "theme.NotFound.p1": {
+        "message": "ہم آپ کی تلاش کردہ چیز نہیں ڈھونڈ سکے۔",
+        "description": "The first paragraph of the 404 page"
+    },
+    "theme.NotFound.p2": {
+        "message": "براہ کرم سائٹ کے مالک سے رابطہ کریں اور انہیں بتائیں کہ لنک ٹوٹا ہوا ہے۔",
+        "description": "The 2nd paragraph of the 404 page"
+    },
+    "theme.BackToTopButton.buttonAriaLabel": {
+        "message": "اوپر واپس جائیں",
+        "description": "The ARIA label for the back to top button"
+    },
+    "theme.docs.sidebar.expandButtonTitle": {
+        "message": "سائیڈبار پھیلائیں",
+        "description": "The ARIA label and title attribute for expand button of doc sidebar"
+    },
+    "theme.docs.sidebar.expandButtonAriaLabel": {
+        "message": "سائیڈبار پھیلائیں",
+        "description": "The ARIA label and title attribute for expand button of doc sidebar"
+    }
+}

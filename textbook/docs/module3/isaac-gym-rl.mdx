@@ -1,0 +1,198 @@
+---
+sidebar_position: 3
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function IsaacGymRL() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Isaac Gym کے ساتھ کمک سیکھنا (Reinforcement Learning)</h1>
+        
+        <h2>🎯 Isaac Gym کیا ہے؟</h2>
+        
+        <p><strong>Isaac Gym</strong> NVIDIA کا ایک فریم ورک ہے جو GPU پر بڑے پیمانے پر متوازی کمک سیکھنے (RL) کی اجازت دیتا ہے۔ روایتی سمیلیٹروں کے برعکس جو CPU استعمال کرتے ہیں، Isaac Gym ہزاروں روبوٹس کو ایک ہی GPU پر بیک وقت نقل کر سکتا ہے، جس سے تربیت کا وقت دنوں سے منٹوں تک کم ہو جاتا ہے۔</p>
+        
+        <h2>🏗️ اہم تصورات</h2>
+        
+        <ul>
+          <li><strong>ماحول (Environment)</strong>: وہ دنیا جہاں روبوٹ سیکھتا ہے (جیسے کارٹ پول، ہیومنائڈ)۔</li>
+          <li><strong>ایجنٹ (Agent)</strong>: روبوٹ جو اعمال انجام دیتا ہے۔</li>
+          <li><strong>انعام (Reward)</strong>: ایجنٹ کو اچھی کارکردگی پر ملنے والا اسکور۔</li>
+          <li><strong>مشاہدہ (Observation)</strong>: ایجنٹ کو ماحول کے بارے میں کیا معلوم ہے (پوزیشن، رفتار)۔</li>
+        </ul>
+        
+        <h2>💻 تنصیب</h2>
+        
+        <p>Isaac Gym پیکیج ڈاؤن لوڈ کریں اور انسٹال کریں:</p>
+        
+        <pre>{`
+# Create conda environment
+conda create -n rlgpu python=3.8
+conda activate rlgpu
+
+# Install PyTorch (ensure CUDA compatibility)
+pip install torch torchvision
+
+# Install Isaac Gym
+cd isaacgym/python
+pip install -e .
+        `}</pre>
+        
+        <h2>🚀 تربیت کی مثال: Cartpole</h2>
+        
+        <p>آئیے ایک کلاسک RL مسئلہ چلاتے ہیں: ایک کھمبے کو کارٹ پر متوازن کرنا۔</p>
+        
+        <pre>{`
+cd isaacgym/python/examples
+python train.py task=Cartpole
+        `}</pre>
+        
+        <p>آپ دیکھیں گے کہ ہزاروں کارٹ پولز متوازی طور پر تربیت حاصل کر رہے ہیں!</p>
+        
+        <h2>🧠 اپنا RL ٹاسک بنانا</h2>
+        
+        <p>ایک حسب ضرورت ٹاسک بنانے کے لیے، آپ کو <code>VecTask</code> کلاس کا وارث ہونا چاہیے:</p>
+        
+        <pre>{`
+from isaacgym import gymapi
+from isaacgymenvs.tasks.base.vec_task import VecTask
+
+class MyRobotTask(VecTask):
+    def __init__(self, cfg, sim_device, graphics_device_id, headless):
+        super().__init__(config=cfg, sim_device=sim_device, graphics_device_id=graphics_device_id, headless=headless)
+        
+        # Create simulation
+        self.gym = gymapi.acquire_gym()
+        self.sim = self.gym.create_sim(...)
+        
+    def compute_reward(self):
+        # Define reward function
+        # e.g., reward = 1.0 - distance_to_target
+        pass
+        
+    def reset_idx(self, env_ids):
+        # Reset robots that failed
+        pass
+        `}</pre>
+        
+        <h2>📊 Sim-to-Real ٹرانسفر</h2>
+        
+        <p>نقلی میں تربیت یافتہ پالیسی کو حقیقی روبوٹ میں منتقل کرنا مشکل ہے۔ Isaac Gym اس میں مدد کرتا ہے:</p>
+        
+        <ul>
+          <li><strong>ڈومین رینڈمائزیشن</strong>: رگڑ، بڑے پیمانے پر، اور بصری خصوصیات کو تصادفی طور پر تبدیل کرنا تاکہ پالیسی مضبوط ہو۔</li>
+          <li><strong>شور (Noise)</strong>: سینسر ڈیٹا میں شور شامل کرنا۔</li>
+        </ul>
+        
+        <h2>🛠️ بہترین طریقے</h2>
+        
+        <ol>
+          <li><strong>انعام کی تشکیل (Reward Shaping)</strong>: ایک اچھا انعام فنکشن بہت ضروری ہے۔ چھوٹے، مسلسل انعامات (جیسے ہدف کی طرف پیشرفت) بڑے، ویرل انعامات (جیسے صرف جیتنے پر) سے بہتر ہیں۔</li>
+          <li><strong>نصاب کی تعلیم (Curriculum Learning)</strong>: آسان کاموں سے شروع کریں اور آہستہ آہستہ مشکل میں اضافہ کریں۔</li>
+        </ol>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ آپ کے پاس ایک ہوشیار ایجنٹ ہے، آئیے دیکھتے ہیں کہ <strong>Omniverse Replicator</strong> کے ساتھ اس کے لیے تربیتی ڈیٹا کیسے تیار کیا جائے →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Reinforcement Learning with Isaac Gym</h1>
+      
+      <h2>🎯 What is Isaac Gym?</h2>
+      
+      <p><strong>Isaac Gym</strong> is NVIDIA's framework for massive parallel reinforcement learning (RL) on GPU. Unlike traditional simulators that use CPU, Isaac Gym can simulate thousands of robots simultaneously on a single GPU, reducing training time from days to minutes.</p>
+      
+      <h2>🏗️ Key Concepts</h2>
+      
+      <ul>
+        <li><strong>Environment</strong>: The world where the robot learns (e.g., Cartpole, Humanoid).</li>
+        <li><strong>Agent</strong>: The robot performing actions.</li>
+        <li><strong>Reward</strong>: The score the agent gets for performing well.</li>
+        <li><strong>Observation</strong>: What the agent knows about the environment (position, velocity).</li>
+      </ul>
+      
+      <h2>💻 Installation</h2>
+      
+      <p>Download and install the Isaac Gym package:</p>
+      
+      <pre>{`
+# Create conda environment
+conda create -n rlgpu python=3.8
+conda activate rlgpu
+
+# Install PyTorch (ensure CUDA compatibility)
+pip install torch torchvision
+
+# Install Isaac Gym
+cd isaacgym/python
+pip install -e .
+      `}</pre>
+      
+      <h2>🚀 Training Example: Cartpole</h2>
+      
+      <p>Let's run a classic RL problem: balancing a pole on a cart.</p>
+      
+      <pre>{`
+cd isaacgym/python/examples
+python train.py task=Cartpole
+      `}</pre>
+      
+      <p>You will see thousands of cartpoles training in parallel!</p>
+      
+      <h2>🧠 Creating Your Own RL Task</h2>
+      
+      <p>To create a custom task, you inherit from the <code>VecTask</code> class:</p>
+      
+      <pre>{`
+from isaacgym import gymapi
+from isaacgymenvs.tasks.base.vec_task import VecTask
+
+class MyRobotTask(VecTask):
+    def __init__(self, cfg, sim_device, graphics_device_id, headless):
+        super().__init__(config=cfg, sim_device=sim_device, graphics_device_id=graphics_device_id, headless=headless)
+        
+        # Create simulation
+        self.gym = gymapi.acquire_gym()
+        self.sim = self.gym.create_sim(...)
+        
+    def compute_reward(self):
+        # Define reward function
+        # e.g., reward = 1.0 - distance_to_target
+        pass
+        
+    def reset_idx(self, env_ids):
+        # Reset robots that failed
+        pass
+      `}</pre>
+      
+      <h2>📊 Sim-to-Real Transfer</h2>
+      
+      <p>Transferring a policy trained in simulation to a real robot is challenging. Isaac Gym helps with:</p>
+      
+      <ul>
+        <li><strong>Domain Randomization</strong>: Randomizing friction, mass, and visual properties to make the policy robust.</li>
+        <li><strong>Noise</strong>: Adding noise to sensor data.</li>
+      </ul>
+      
+      <h2>🛠️ Best Practices</h2>
+      
+      <ol>
+        <li><strong>Reward Shaping</strong>: A good reward function is crucial. Small, continuous rewards (like progress towards goal) are better than large, sparse rewards (like only on win).</li>
+        <li><strong>Curriculum Learning</strong>: Start with easy tasks and gradually increase difficulty.</li>
+      </ol>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that you have a smart agent, let's see how to generate training data for it with <strong>Omniverse Replicator</strong> →</p>
+    </div>
+  );
+}

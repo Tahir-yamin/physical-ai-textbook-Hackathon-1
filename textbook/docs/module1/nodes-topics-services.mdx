@@ -1,0 +1,868 @@
+---
+sidebar_position: 3
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function NodesTopicsServices() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>نوڈز، ٹاپکس اور سروسز</h1>
+        
+        <h2>🎯 ROS 2 مواصلات کو سمجھنا</h2>
+        
+        <p>ROS 2 مختلف روبوٹکس منظرناموں کے مطابق مواصلات کے متعدد نمونے فراہم کرتا ہے۔ تین بنیادی میکانزم ہیں:</p>
+        
+        <ol>
+          <li><strong>ٹاپکس (Topics)</strong>: غیر مطابقت پذیر، پبلش-سبسکرائب (کئی سے کئی)</li>
+          <li><strong>سروسز (Services)</strong>: مطابقت پذیر، درخواست-جواب (ایک سے ایک)</li>
+          <li><strong>ایکشنز (Actions)</strong>: غیر مطابقت پذیر، فیڈ بیک کے ساتھ مقصد پر مبنی (طویل چلنے والے کاموں کے لیے)</li>
+        </ol>
+        
+        <h2>📡 ٹاپکس: پبلش-سبسکرائب پیٹرن</h2>
+        
+        <h3>ٹاپکس کیا ہیں؟</h3>
+        
+        <p><strong>ٹاپکس</strong> نامزد بسیں ہیں جن پر نوڈز پیغامات کا تبادلہ کرتے ہیں۔ وہ ایک <strong>پبلش-سبسکرائب</strong> پیٹرن کو نافذ کرتے ہیں:</p>
+        
+        <ul>
+          <li>پبلشرز ایک ٹاپک پر پیغامات بھیجتے ہیں</li>
+          <li>سبسکرائبرز ایک ٹاپک سے پیغامات وصول کرتے ہیں</li>
+          <li>الگ تھلگ: پبلشرز نہیں جانتے کہ کون سبسکرائب کر رہا ہے</li>
+          <li>غیر مطابقت پذیر: نان بلاکنگ مواصلات</li>
+        </ul>
+        
+        <h3>استعمال کے کیسز</h3>
+        
+        <p>ٹاپکس ان کے لیے مثالی ہیں:</p>
+        <ul>
+          <li>✅ سینسر ڈیٹا کو اسٹریم کرنا (کیمرے کی تصاویر، لیزر اسکین)</li>
+          <li>✅ روبوٹ کی حالت نشر کرنا</li>
+          <li>✅ ہائی فریکوئنسی ڈیٹا اسٹریمز</li>
+          <li>✅ ایک سے کئی یا کئی سے کئی مواصلات</li>
+        </ul>
+        
+        <h3>پبلشر بنانا (Python)</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalPublisher(Node):
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        # Create publisher
+        self.publisher = self.create_publisher(String, 'robot_status', 10)
+
+        # Create timer (publish every 0.5 seconds)
+        self.timer = self.create_timer(0.5, self.timer_callback)
+        self.counter = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'Robot status: Active - Count {self.counter}'
+        self.publisher.publish(msg)
+        self.get_logger().info(f'Publishing: "{msg.data}"')
+        self.counter += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MinimalPublisher()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+        `}</pre>
+        
+        <h3>سبسکرائبر بنانا (Python)</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalSubscriber(Node):
+    def __init__(self):
+        super().__init__('minimal_subscriber')
+        # Create subscriber
+        self.subscription = self.create_subscription(
+            String,
+            'robot_status',
+            self.listener_callback,
+            10
+        )
+
+    def listener_callback(self, msg):
+        self.get_logger().info(f'Received: "{msg.data}"')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MinimalSubscriber()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+        `}</pre>
+        
+        <h3>پبلشرز اور سبسکرائبرز کو چلانا</h3>
+        
+        <pre>{`
+# Terminal 1: Run publisher
+ros2 run my_package publisher_node
+
+# Terminal 2: Run subscriber
+ros2 run my_package subscriber_node
+
+# Terminal 3: Inspect the topic
+ros2 topic echo /robot_status
+
+# List all topics
+ros2 topic list
+
+# Get topic info
+ros2 topic info /robot_status
+        `}</pre>
+        
+        <h2>🔄 سروسز: درخواست-جواب پیٹرن</h2>
+        
+        <h3>سروسز کیا ہیں؟</h3>
+        
+        <p><strong>سروسز</strong> درخواست-جواب ماڈل کے ذریعے مطابقت پذیر مواصلات فراہم کرتی ہیں:</p>
+        
+        <ul>
+          <li>کلائنٹ ایک درخواست بھیجتا ہے</li>
+          <li>سرور کارروائی کرتا ہے اور جواب بھیجتا ہے</li>
+          <li>بلاکنگ: کلائنٹ جواب کا انتظار کرتا ہے</li>
+          <li>ایک سے ایک مواصلات</li>
+        </ul>
+        
+        <h3>استعمال کے کیسز</h3>
+        
+        <p>سروسز ان کے لیے مثالی ہیں:</p>
+        <ul>
+          <li>✅ مخصوص اعمال کو متحرک کرنا (موٹرز اسٹارٹ/اسٹاپ)</li>
+          <li>✅ معلومات طلب کرنا (موجودہ پوز حاصل کریں)</li>
+          <li>✅ کنفیگریشن تبدیلیاں</li>
+          <li>✅ کبھی کبھار، اہم آپریشنز</li>
+        </ul>
+        
+        <h3>کسٹم سروس کی تعریف</h3>
+        
+        <p><code>srv/AddTwoInts.srv</code> بنائیں:</p>
+        
+        <pre>{`
+int64 a
+int64 b
+---
+int64 sum
+        `}</pre>
+        
+        <h3>سروس سرور بنانا (Python)</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+
+class AddTwoIntsServer(Node):
+    def __init__(self):
+        super().__init__('add_two_ints_server')
+        self.srv = self.create_service(
+            AddTwoInts,
+            'add_two_ints',
+            self.add_two_ints_callback
+        )
+        self.get_logger().info('Add Two Ints Service Ready')
+
+    def add_two_ints_callback(self, request, response):
+        response.sum = request.a + request.b
+        self.get_logger().info(f'Request: {request.a} + {request.b} = {response.sum}')
+        return response
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AddTwoIntsServer()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+        `}</pre>
+        
+        <h3>سروس کلائنٹ بنانا (Python)</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+import sys
+
+class AddTwoIntsClient(Node):
+    def __init__(self):
+        super().__init__('add_two_ints_client')
+        self.client = self.create_client(AddTwoInts, 'add_two_ints')
+
+        # Wait for service to be available
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting...')
+
+    def send_request(self, a, b):
+        request = AddTwoInts.Request()
+        request.a = a
+        request.b = b
+
+        future = self.client.call_async(request)
+        return future
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AddTwoIntsClient()
+
+    future = node.send_request(int(sys.argv[1]), int(sys.argv[2]))
+    rclpy.spin_until_future_complete(node, future)
+
+    response = future.result()
+    node.get_logger().info(f'Result: {sys.argv[1]} + {sys.argv[2]} = {response.sum}')
+
+    node.destroy_node()
+    rclpy.shutdown()
+        `}</pre>
+        
+        <h3>سروسز کا استعمال</h3>
+        
+        <pre>{`
+# Run the server
+ros2 run my_package service_server
+
+# Call the service from command line
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 5, b: 7}"
+
+# List all services
+ros2 service list
+
+# Get service type
+ros2 service type /add_two_ints
+        `}</pre>
+        
+        <h2>🎬 ایکشنز: مقصد پر مبنی کام</h2>
+        
+        <h3>ایکشنز کیا ہیں؟</h3>
+        
+        <p><strong>ایکشنز</strong> طویل چلنے والے کاموں کے لیے ہیں جن کی ضرورت ہوتی ہے:</p>
+        <ul>
+          <li>مقصد کی تفصیلات</li>
+          <li>مسلسل فیڈ بیک</li>
+          <li>منسوخ کرنے کی صلاحیت</li>
+        </ul>
+        
+        <h3>ایکشن کا ڈھانچہ</h3>
+        
+        <pre>{`
+# Goal
+int32 target_position
+---
+# Result
+int32 final_position
+---
+# Feedback
+int32 current_position
+        `}</pre>
+        
+        <h3>استعمال کے کیسز</h3>
+        
+        <p>ایکشنز ان کے لیے مثالی ہیں:</p>
+        <ul>
+          <li>✅ ایک ہدف کی طرف نیویگیشن</li>
+          <li>✅ آبجیکٹ ہیرا پھیری</li>
+          <li>✅ طویل چلنے والے حساب کتاب</li>
+          <li>✅ ایسے کام جن کو پیشرفت کی تازہ کاریوں کی ضرورت ہوتی ہے</li>
+        </ul>
+        
+        <h3>ایکشن سرور کی مثال</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.action import ActionServer
+from rclpy.node import Node
+from action_tutorials_interfaces.action import Fibonacci
+
+class FibonacciActionServer(Node):
+    def __init__(self):
+        super().__init__('fibonacci_action_server')
+        self._action_server = ActionServer(
+            self,
+            Fibonacci,
+            'fibonacci',
+            self.execute_callback
+        )
+
+    def execute_callback(self, goal_handle):
+        self.get_logger().info('Executing goal...')
+
+        feedback_msg = Fibonacci.Feedback()
+        feedback_msg.partial_sequence = [0, 1]
+
+        for i in range(1, goal_handle.request.order):
+            # Send feedback
+            feedback_msg.partial_sequence.append(
+                feedback_msg.partial_sequence[i] + feedback_msg.partial_sequence[i-1]
+            )
+            goal_handle.publish_feedback(feedback_msg)
+
+        goal_handle.succeed()
+        result = Fibonacci.Result()
+        result.sequence = feedback_msg.partial_sequence
+        return result
+        `}</pre>
+        
+        <h2>📊 موازنہ جدول</h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>خصوصیت</th>
+              <th>ٹاپکس</th>
+              <th>سروسز</th>
+              <th>ایکشنز</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>پیٹرن</strong></td>
+              <td>پبلش-سبسکرائب</td>
+              <td>درخواست-جواب</td>
+              <td>مقصد-فیڈ بیک-نتیجہ</td>
+            </tr>
+            <tr>
+              <td><strong>سمت</strong></td>
+              <td>کئی سے کئی</td>
+              <td>ایک سے ایک</td>
+              <td>ایک سے ایک</td>
+            </tr>
+            <tr>
+              <td><strong>بلاکنگ</strong></td>
+              <td>نہیں</td>
+              <td>ہاں</td>
+              <td>نہیں (فیڈ بیک کے ساتھ)</td>
+            </tr>
+            <tr>
+              <td><strong>استعمال کا کیس</strong></td>
+              <td>اسٹریمنگ ڈیٹا</td>
+              <td>فوری سوالات</td>
+              <td>طویل کام</td>
+            </tr>
+            <tr>
+              <td><strong>منسوخی</strong></td>
+              <td>لاگو نہیں</td>
+              <td>نہیں</td>
+              <td>ہاں</td>
+            </tr>
+            <tr>
+              <td><strong>فیڈ بیک</strong></td>
+              <td>نہیں</td>
+              <td>نہیں</td>
+              <td>ہاں</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h2>🛠️ خود شناسی کے ٹولز</h2>
+        
+        <p>ROS 2 طاقتور کمانڈ لائن ٹولز فراہم کرتا ہے:</p>
+        
+        <pre>{`
+# Node information
+ros2 node list
+ros2 node info /my_node
+
+# Topic operations
+ros2 topic  list
+ros2 topic echo /topic_name
+ros2 topic hz /topic_name
+ros2 topic pub /topic_name std_msgs/msg/String "{data: 'test'}"
+
+# Service operations
+ros2 service list
+ros2 service call /service_name
+
+# Action operations
+ros2 action list
+ros2 action info /action_name
+        `}</pre>
+        
+        <h2>🎯 بہترین طریقے</h2>
+        
+        <ol>
+          <li><strong>صحیح پیٹرن کا انتخاب کریں</strong>:
+            <ul>
+              <li>- ہائی فریکوئنسی ڈیٹا → ٹاپکس</li>
+              <li>- فوری آپریشنز → سروسز</li>
+              <li>- فیڈ بیک کے ساتھ طویل کام → ایکشنز</li>
+            </ul>
+          </li>
+          <li><strong>QoS کنفیگریشن</strong>:
+            <ul>
+              <li>- سینسر ڈیٹا: بہترین کوشش</li>
+              <li>- کنٹرول کمانڈز: قابل اعتماد</li>
+            </ul>
+          </li>
+          <li><strong>نام دینے کے کنونشنز</strong>:
+            <ul>
+              <li>- وضاحتی نام استعمال کریں: <code>/robot/camera/image</code> نہ کہ <code>/img</code></li>
+              <li>- تنازعات سے بچنے کے لیے نیم اسپیس نوڈز</li>
+            </ul>
+          </li>
+          <li><strong>غلطی سے نمٹنا</strong>:
+            <ul>
+              <li>- ہمیشہ سروس کی دستیابی چیک کریں</li>
+              <li>- ایکشن منسوخی کو خوبصورتی سے ہینڈل کریں</li>
+            </ul>
+          </li>
+        </ol>
+        
+        <h2>🚀 عملی مشق</h2>
+        
+        <p>ایک سادہ روبوٹ مانیٹرنگ سسٹم بنائیں:</p>
+        
+        <ol>
+          <li>بیٹری کی حیثیت (ٹاپک) کے لیے ایک پبلشر بنائیں</li>
+          <li>موٹرز کو شروع/بند کرنے کے لیے ایک سروس بنائیں</li>
+          <li>وے پوائنٹ پر نیویگیشن کے لیے ایک ایکشن بنائیں</li>
+        </ol>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ آپ مواصلاتی میکانزم کو سمجھتے ہیں، آئیے سیکھتے ہیں کہ <strong>Python AI ایجنٹس کو ROS 2 کے ساتھ کیسے ضم کیا جائے</strong> →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Nodes, Topics, and Services</h1>
+      
+      <h2>🎯 Understanding ROS 2 Communication</h2>
+      
+      <p>ROS 2 provides multiple communication patterns to suit different robotics scenarios. The three primary mechanisms are:</p>
+      
+      <ol>
+        <li><strong>Topics</strong>: Asynchronous, publish-subscribe (many-to-many)</li>
+        <li><strong>Services</strong>: Synchronous, request-response (one-to-one)</li>
+        <li><strong>Actions</strong>: Asynchronous, goal-oriented with feedback (for long-running tasks)</li>
+      </ol>
+      
+      <h2>📡 Topics: Publish-Subscribe Pattern</h2>
+      
+      <h3>What Are Topics?</h3>
+      
+      <p><strong>Topics</strong> are named buses over which nodes exchange messages. They implement a <strong>publish-subscribe</strong> pattern:</p>
+      
+      <ul>
+        <li>Publishers send messages to a topic</li>
+        <li>Subscribers receive messages from a topic</li>
+        <li>Decoupled: Publishers don't know who's subscribing</li>
+        <li>Asynchronous: Non-blocking communication</li>
+      </ul>
+      
+      <h3>Use Cases</h3>
+      
+      <p>Topics are ideal for:</p>
+      <ul>
+        <li>✅ Streaming sensor data (camera images, laser scans)</li>
+        <li>✅ Broadcasting robot state</li>
+        <li>✅ High-frequency data streams</li>
+        <li>✅ One-to-many or many-to-many communication</li>
+      </ul>
+      
+      <h3>Creating a Publisher (Python)</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalPublisher(Node):
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        # Create publisher
+        self.publisher = self.create_publisher(String, 'robot_status', 10)
+
+        # Create timer (publish every 0.5 seconds)
+        self.timer = self.create_timer(0.5, self.timer_callback)
+        self.counter = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'Robot status: Active - Count {self.counter}'
+        self.publisher.publish(msg)
+        self.get_logger().info(f'Publishing: "{msg.data}"')
+        self.counter += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MinimalPublisher()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+      `}</pre>
+      
+      <h3>Creating a Subscriber (Python)</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalSubscriber(Node):
+    def __init__(self):
+        super().__init__('minimal_subscriber')
+        # Create subscriber
+        self.subscription = self.create_subscription(
+            String,
+            'robot_status',
+            self.listener_callback,
+            10
+        )
+
+    def listener_callback(self, msg):
+        self.get_logger().info(f'Received: "{msg.data}"')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MinimalSubscriber()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+      `}</pre>
+      
+      <h3>Running Publishers and Subscribers</h3>
+      
+      <pre>{`
+# Terminal 1: Run publisher
+ros2 run my_package publisher_node
+
+# Terminal 2: Run subscriber
+ros2 run my_package subscriber_node
+
+# Terminal 3: Inspect the topic
+ros2 topic echo /robot_status
+
+# List all topics
+ros2 topic list
+
+# Get topic info
+ros2 topic info /robot_status
+      `}</pre>
+      
+      <h2>🔄 Services: Request-Response Pattern</h2>
+      
+      <h3>What Are Services?</h3>
+      
+      <p><strong>Services</strong> provide synchronous communication via a request-response model:</p>
+      
+      <ul>
+        <li>Client sends a request</li>
+        <li>Server processes and sends a response</li>
+        <li>Blocking: Client waits for response</li>
+        <li>One-to-one communication</li>
+      </ul>
+      
+      <h3>Use Cases</h3>
+      
+      <p>Services are ideal for:</p>
+      <ul>
+        <li>✅ Triggering specific actions (start/stop motors)</li>
+        <li>✅ Querying information (get current pose)</li>
+        <li>✅ Configuration changes</li>
+        <li>✅ Infrequent, critical operations</li>
+      </ul>
+      
+      <h3>Defining a Custom Service</h3>
+      
+      <p>Create <code>srv/AddTwoInts.srv</code>:</p>
+      
+      <pre>{`
+int64 a
+int64 b
+---
+int64 sum
+      `}</pre>
+      
+      <h3>Creating a Service Server (Python)</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+
+class AddTwoIntsServer(Node):
+    def __init__(self):
+        super().__init__('add_two_ints_server')
+        self.srv = self.create_service(
+            AddTwoInts,
+            'add_two_ints',
+            self.add_two_ints_callback
+        )
+        self.get_logger().info('Add Two Ints Service Ready')
+
+    def add_two_ints_callback(self, request, response):
+        response.sum = request.a + request.b
+        self.get_logger().info(f'Request: {request.a} + {request.b} = {response.sum}')
+        return response
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AddTwoIntsServer()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+      `}</pre>
+      
+      <h3>Creating a Service Client (Python)</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+import sys
+
+class AddTwoIntsClient(Node):
+    def __init__(self):
+        super().__init__('add_two_ints_client')
+        self.client = self.create_client(AddTwoInts, 'add_two_ints')
+
+        # Wait for service to be available
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting...')
+
+    def send_request(self, a, b):
+        request = AddTwoInts.Request()
+        request.a = a
+        request.b = b
+
+        future = self.client.call_async(request)
+        return future
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AddTwoIntsClient()
+
+    future = node.send_request(int(sys.argv[1]), int(sys.argv[2]))
+    rclpy.spin_until_future_complete(node, future)
+
+    response = future.result()
+    node.get_logger().info(f'Result: {sys.argv[1]} + {sys.argv[2]} = {response.sum}')
+
+    node.destroy_node()
+    rclpy.shutdown()
+      `}</pre>
+      
+      <h3>Using Services</h3>
+      
+      <pre>{`
+# Run the server
+ros2 run my_package service_server
+
+# Call the service from command line
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts "{a: 5, b: 7}"
+
+# List all services
+ros2 service list
+
+# Get service type
+ros2 service type /add_two_ints
+      `}</pre>
+      
+      <h2>🎬 Actions: Goal-Oriented Tasks</h2>
+      
+      <h3>What Are Actions?</h3>
+      
+      <p><strong>Actions</strong> are for long-running tasks that require:</p>
+      <ul>
+        <li>Goal specification</li>
+        <li>Continuous feedback</li>
+        <li>Ability to cancel</li>
+      </ul>
+      
+      <h3>Action Structure</h3>
+      
+      <pre>{`
+# Goal
+int32 target_position
+---
+# Result
+int32 final_position
+---
+# Feedback
+int32 current_position
+      `}</pre>
+      
+      <h3>Use Cases</h3>
+      
+      <p>Actions are ideal for:</p>
+      <ul>
+        <li>✅ Navigation to a goal</li>
+        <li>✅ Object manipulation</li>
+        <li>✅ Long-running computations</li>
+        <li>✅ Tasks that need progress updates</li>
+      </ul>
+      
+      <h3>Action Server Example</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.action import ActionServer
+from rclpy.node import Node
+from action_tutorials_interfaces.action import Fibonacci
+
+class FibonacciActionServer(Node):
+    def __init__(self):
+        super().__init__('fibonacci_action_server')
+        self._action_server = ActionServer(
+            self,
+            Fibonacci,
+            'fibonacci',
+            self.execute_callback
+        )
+
+    def execute_callback(self, goal_handle):
+        self.get_logger().info('Executing goal...')
+
+        feedback_msg = Fibonacci.Feedback()
+        feedback_msg.partial_sequence = [0, 1]
+
+        for i in range(1, goal_handle.request.order):
+            # Send feedback
+            feedback_msg.partial_sequence.append(
+                feedback_msg.partial_sequence[i] + feedback_msg.partial_sequence[i-1]
+            )
+            goal_handle.publish_feedback(feedback_msg)
+
+        goal_handle.succeed()
+        result = Fibonacci.Result()
+        result.sequence = feedback_msg.partial_sequence
+        return result
+      `}</pre>
+      
+      <h2>📊 Comparison Table</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Topics</th>
+            <th>Services</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pattern</strong></td>
+            <td>Pub-Sub</td>
+            <td>Request-Response</td>
+            <td>Goal-Feedback-Result</td>
+          </tr>
+          <tr>
+            <td><strong>Direction</strong></td>
+            <td>Many-to-Many</td>
+            <td>One-to-One</td>
+            <td>One-to-One</td>
+          </tr>
+          <tr>
+            <td><strong>Blocking</strong></td>
+            <td>No</td>
+            <td>Yes</td>
+            <td>No (with feedback)</td>
+          </tr>
+          <tr>
+            <td><strong>Use Case</strong></td>
+            <td>Streaming data</td>
+            <td>Quick queries</td>
+            <td>Long tasks</td>
+          </tr>
+          <tr>
+            <td><strong>Cancellation</strong></td>
+            <td>N/A</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong>Feedback</strong></td>
+            <td>No</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h2>🛠️ Introspection Tools</h2>
+      
+      <p>ROS 2 provides powerful command-line tools:</p>
+      
+      <pre>{`
+# Node information
+ros2 node list
+ros2 node info /my_node
+
+# Topic operations
+ros2 topic  list
+ros2 topic echo /topic_name
+ros2 topic hz /topic_name
+ros2 topic pub /topic_name std_msgs/msg/String "{data: 'test'}"
+
+# Service operations
+ros2 service list
+ros2 service call /service_name
+
+# Action operations
+ros2 action list
+ros2 action info /action_name
+      `}</pre>
+      
+      <h2>🎯 Best Practices</h2>
+      
+      <ol>
+        <li><strong>Choose the Right Pattern</strong>:
+          <ul>
+            <li>- High-frequency data → Topics</li>
+            <li>- Quick operations → Services</li>
+            <li>- Long tasks with feedback → Actions</li>
+          </ul>
+        </li>
+        <li><strong>QoS Configuration</strong>:
+          <ul>
+            <li>- Sensor data: Best Effort</li>
+            <li>- Control commands: Reliable</li>
+          </ul>
+        </li>
+        <li><strong>Naming Conventions</strong>:
+          <ul>
+            <li>- Use descriptive names: <code>/robot/camera/image</code> not <code>/img</code></li>
+            <li>- Namespace nodes to avoid conflicts</li>
+          </ul>
+        </li>
+        <li><strong>Error Handling</strong>:
+          <ul>
+            <li>- Always check service availability</li>
+            <li>- Handle action cancellations gracefully</li>
+          </ul>
+        </li>
+      </ol>
+      
+      <h2>🚀 Practical  Exercise</h2>
+      
+      <p>Build a simple robot monitoring system:</p>
+      
+      <ol>
+        <li>Create a publisher for battery status (topic)</li>
+        <li>Create a service to start/stop motors</li>
+        <li>Create an action for navigation to a waypoint</li>
+      </ol>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that you understand communication mechanisms, let's learn how to <strong>integrate Python AI agents with ROS 2</strong> →</p>
+    </div>
+  );
+}

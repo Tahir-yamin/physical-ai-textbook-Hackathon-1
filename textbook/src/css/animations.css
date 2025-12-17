@@ -1,0 +1,154 @@
+/**
+ * Animations CSS - Futuristic transitions and effects
+ */
+
+/* Particle animation for background */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+@keyframes float-delayed {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(-180deg);
+    }
+}
+
+/* Glowing pulse animation */
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+    }
+}
+
+/* Gradient animation for borders */
+@keyframes gradient-rotate {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stagger animation for cards */
+.animate-stagger>* {
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.animate-stagger>*:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.animate-stagger>*:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.animate-stagger>*:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.animate-stagger>*:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.animate-stagger>*:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.animate-stagger>*:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+/* Shimmer effect for loading */
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.shimmer {
+    animation: shimmer 1.5s infinite;
+    background: linear-gradient(to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0) 100%);
+    background-size: 800px 100%;
+}
+
+/* Typing cursor animation */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.typing-cursor::after {
+    content: '|';
+    animation: blink 1s infinite;
+    margin-left: 5px;
+}
+
+/* Scale on hover */
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Respects reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

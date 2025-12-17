@@ -1,0 +1,742 @@
+---
+sidebar_position: 5
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function URDF() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Humanoid Robots کے لیے URDF کو سمجھنا</h1>
+        
+        <h2>🎯 URDF کا تعارف</h2>
+        
+        <p><strong>URDF (Unified Robot Description Format)</strong> ROS میں روبوٹس کو بیان کرنے کے لیے XML پر مبنی فارمیٹ ہے۔ یہ روبوٹ کی ساخت، حرکیات، حرکیات، اور بصری ظاہری شکل کی وضاحت کرتا ہے۔</p>
+        
+        <h2>🏗️ URDF کا ڈھانچہ</h2>
+        
+        <p>URDF فائل دو اہم عناصر پر مشتمل ہوتی ہے:</p>
+        
+        <ol>
+          <li><strong>لنکس (Links)</strong>: سخت جسم (روبوٹ کے حصے)</li>
+          <li><strong>جوائنٹس (Joints)</strong>: لنکس کے درمیان رابطے</li>
+        </ol>
+        
+        <h3>بنیادی URDF مثال</h3>
+        
+        <pre>{`
+<?xml version="1.0"?>
+<robot name="simple_robot">
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.6" iyz="0.0" izz="0.8"/>
+    </inertial>
+  </link>
+
+  <!-- Wheel Link -->
+  <link name="wheel_left">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint connecting base to wheel -->
+  <joint name="base_to_wheel_left" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_left"/>
+    <origin xyz="0 0.25 0" rpy="1.57 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+</robot>
+        `}</pre>
+        
+        <h2>🔗 لنک عناصر</h2>
+        
+        <p>ہر لنک کے تین اجزاء ہو سکتے ہیں:</p>
+        
+        <h3>1. بصری (Visual)</h3>
+        
+        <p>تصور کے لیے ظاہری شکل کی وضاحت کرتا ہے:</p>
+        
+        <pre>{`
+<visual>
+  <origin xyz="0 0 0.25" rpy="0 0 0"/>
+  <geometry>
+    <mesh filename="package://my_robot/meshes/body.stl" scale="0.001 0.001 0.001"/>
+  </geometry>
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1"/>
+  </material>
+</visual>
+        `}</pre>
+        
+        <h3>2. تصادم (Collision)</h3>
+        
+        <p>تصادم کا پتہ لگانے کے لیے آسان جیومیٹری:</p>
+        
+        <pre>{`
+<collision>
+  <geometry>
+    <box size="0.3 0.3 0.4"/>
+  </geometry>
+</collision>
+        `}</pre>
+        
+        <h3>3. جڑتا (Inertial)</h3>
+        
+        <p>نقلی (simulation) کے لیے طبعی خصوصیات:</p>
+        
+        <pre>{`
+<inertial>
+  <mass value="5.0"/>
+  <origin xyz="0 0 0.25"/>
+  <inertia ixx="0.167" ixy="0" ixz="0" iyy="0.167" iyz="0" izz="0.25"/>
+</inertial>
+        `}</pre>
+        
+        <h2>🔗 جوائنٹ کی اقسام</h2>
+        
+        <p>ROS چھ جوائنٹ اقسام کی حمایت کرتا ہے:</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>قسم</th>
+              <th>تفصیل</th>
+              <th>استعمال کا کیس</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>fixed</strong></td>
+              <td>کوئی حرکت نہیں</td>
+              <td>سینسر، جامد رابطے</td>
+            </tr>
+            <tr>
+              <td><strong>revolute</strong></td>
+              <td>حدود کے ساتھ گردش</td>
+              <td>کہنی، گھٹنا</td>
+            </tr>
+            <tr>
+              <td><strong>continuous</strong></td>
+              <td>لامحدود گردش</td>
+              <td>پہیے</td>
+            </tr>
+            <tr>
+              <td><strong>prismatic</strong></td>
+              <td>لکیری حرکت</td>
+              <td>لفٹ، دوربین بازو</td>
+            </tr>
+            <tr>
+              <td><strong>floating</strong></td>
+              <td>6 DOF</td>
+              <td>آزاد تیرتی بنیاد</td>
+            </tr>
+            <tr>
+              <td><strong>planar</strong></td>
+              <td>2D ہوائی جہاز کی حرکت</td>
+              <td>شاذ و نادر ہی استعمال ہوتا ہے</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h3>Revolute جوائنٹ کی مثال</h3>
+        
+        <pre>{`
+<joint name="shoulder_pitch" type="revolute">
+  <parent link="torso"/>
+  <child link="upper_arm"/>
+  <origin xyz="0.3 0 0.5" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+  <limit lower="-1.57" upper="1.57" effort="100" velocity="1.0"/>
+  <dynamics damping="0.7" friction="0.0"/>
+</joint>
+        `}</pre>
+        
+        <h2>🤖 Humanoid Robot URDF ڈھانچہ</h2>
+        
+        <h3>حرکیاتی سلسلہ (Kinematic Chain)</h3>
+        
+        <pre>
+                    head
+                      |
+          shoulder_L-torso-shoulder_R
+                      |
+             hip_L--pelvis--hip_R
+                  /      \
+            knee_L        knee_R
+              |              |
+           ankle_L        ankle_R
+        </pre>
+        
+        <h3>آسان Humanoid URDF</h3>
+        
+        <pre>{`
+<?xml version="1.0"?>
+<robot name="humanoid">
+
+  <!-- Base/Pelvis -->
+  <link name="pelvis">
+    <visual>
+      <geometry>
+        <box size="0.3 0.2 0.15"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="15"/>
+      <inertia ixx="0.5" ixy="0" ixz="0" iyy="0.4" iyz="0" izz="0.3"/>
+    </inertial>
+  </link>
+
+  <!-- Torso -->
+  <link name="torso">
+    <visual>
+      <geometry>
+        <box size="0.3 0.25 0.5"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="20"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="0.8" iyz="0" izz="0.6"/>
+    </inertial>
+  </link>
+
+  <joint name="pelvis_to_torso" type="fixed">
+    <parent link="pelvis"/>
+    <child link="torso"/>
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Right Upper Leg -->
+  <link name="upper_leg_right">
+    <visual>
+      <geometry>
+        <cylinder radius="0.06" length="0.4"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="5"/>
+      <inertia ixx="0.067" ixy="0" ixz="0" iyy="0.067" iyz="0" izz="0.009"/>
+    </inertial>
+  </link>
+
+  <joint name="hip_pitch_right" type="revolute">
+    <parent link="pelvis"/>
+   <child link="upper_leg_right"/>
+    <origin xyz="0 -0.1 -0.075" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="150" velocity="2.0"/>
+  </joint>
+
+  <!-- Right Lower Leg -->
+  <link name="lower_leg_right">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.4"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="knee_pitch_right" type="revolute">
+    <parent link="upper_leg_right"/>
+    <child link="lower_leg_right"/>
+    <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0" upper="0" effort="150" velocity="2.0"/>
+  </joint>
+
+  <!-- Repeat for left leg, arms, head... -->
+
+</robot>
+        `}</pre>
+        
+        <h2>🛠️ ماڈیولریٹی کے لیے xacro کا استعمال</h2>
+        
+        <p><strong>xacro</strong> (XML Macros) URDF کو زیادہ برقرار رکھنے کے قابل بناتا ہے:</p>
+        
+        <pre>{`
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="humanoid">
+
+  <!-- Define macros -->
+  <xacro:macro name="leg" params="side reflect">
+    <link name="upper_leg_\${side}">
+      <visual>
+        <geometry>
+          <cylinder radius="0.06" length="0.4"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="hip_\${side}" type="revolute">
+      <parent link="pelvis"/>
+      <child link="upper_leg_\${side}"/>
+      <origin xyz="0 \${reflect*0.1} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-1.57" upper="1.57" effort="150" velocity="2.0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Use macros -->
+  <xacro:leg side="right" reflect="-1"/>
+  <xacro:leg side="left" reflect="1"/>
+
+</robot>
+        `}</pre>
+        
+        <p>xacro کو URDF میں تبدیل کریں:</p>
+        
+        <pre>{`
+xacro robot.xacro > robot.urdf
+        `}</pre>
+        
+        <h2>🎨 RViz میں تصور کرنا</h2>
+        
+        <p>اپنے روبوٹ کو دیکھنے کے لیے RViz لانچ کریں:</p>
+        
+        <pre>{`
+# Run robot state publisher
+ros2 run robot_state_publisher robot_state_publisher --ros-args -p robot_description:="$(cat robot.urdf)"
+
+# Launch RViz
+ros2 run rviz2 rviz2
+        `}</pre>
+        
+        <p>RViz میں:</p>
+        <ol>
+          <li>فکسڈ فریم کو <code>base_link</code> پر سیٹ کریں</li>
+          <li><code>RobotModel</code> ڈسپلے شامل کریں</li>
+          <li>جوائنٹ اسٹیٹ پبلشر کے ساتھ جوائنٹ زاویوں کو ایڈجسٹ کریں</li>
+        </ol>
+        
+        <h2>🔧 بہترین طریقے</h2>
+        
+        <ol>
+          <li><strong>مستقل اکائیوں کا استعمال کریں</strong>: میٹر، کلوگرام، سیکنڈ</li>
+          <li><strong>مناسب کوآرڈینیٹ فریم</strong>: REP 103 معیار کی پیروی کریں</li>
+          <li><strong>تصادم آسان</strong>: تصادم کے لیے سادہ شکلیں استعمال کریں</li>
+          <li><strong>میش آپٹیمائزیشن</strong>: میش فائلوں کو چھوٹا رکھیں</li>
+          <li><strong>xacro کا استعمال کریں</strong>: پیچیدہ روبوٹس کے لیے، ہمیشہ میکرو استعمال کریں</li>
+          <li><strong>آہستہ آہستہ ٹیسٹ کریں</strong>: ایک وقت میں ایک اعضاء بنائیں اور ٹیسٹ کریں</li>
+        </ol>
+        
+        <h2>📊 جڑتا (Inertia) کا حساب لگانا</h2>
+        
+        <p>ایک باکس کے لیے:</p>
+        <pre>
+ixx = (1/12) * m * (h² + d²)
+iyy = (1/12) * m * (w² + d²)
+izz = (1/12) * m * (w² + h²)
+        </pre>
+        
+        <p>سلنڈر کے لیے:</p>
+        <pre>
+ixx = iyy = (1/12) * m * (3r² + h²)
+izz = (1/2) * m * r²
+        </pre>
+        
+        <h2>🚀 مکمل ماڈیول</h2>
+        
+        <p>مبارک ہو! آپ نے ماڈیول 1 مکمل کر لیا ہے۔ اب آپ سمجھتے ہیں:</p>
+        
+        <p>✅ ROS 2 فن تعمیر اور بنیادی باتیں</p>
+        <p>✅ ٹاپکس، سروسز اور ایکشنز کے ذریعے مواصلات</p>
+        <p>✅ AI ایجنٹس کے ساتھ Python انضمام</p>
+        <p>✅ URDF کے ساتھ روبوٹ کی تفصیل</p>
+        
+        <p>اگلا، Gazebo اور Unity کے ساتھ نقلی (simulation) سیکھنے کے لیے <strong>ماڈیول 2: ڈیجیٹل ٹوئن</strong> کو دریافت کریں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Understanding URDF for Humanoid Robots</h1>
+      
+      <h2>🎯 Introduction to URDF</h2>
+      
+      <p><strong>URDF (Unified Robot Description Format)</strong> is an XML-based format for describing robots in ROS. It defines the robot's structure, kinematics, dynamics, and visual appearance.</p>
+      
+      <h2>🏗️ URDF Structure</h2>
+      
+      <p>A URDF file consists of two main elements:</p>
+      
+      <ol>
+        <li><strong>Links</strong>: Rigid  bodies (robot parts)</li>
+        <li><strong>Joints</strong>: Connections between links</li>
+      </ol>
+      
+      <h3>Basic URDF Example</h3>
+      
+      <pre>{`
+<?xml version="1.0"?>
+<robot name="simple_robot">
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.6" iyz="0.0" izz="0.8"/>
+    </inertial>
+  </link>
+
+  <!-- Wheel Link -->
+  <link name="wheel_left">
+    <visual>
+      <geometry>
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joint connecting base to wheel -->
+  <joint name="base_to_wheel_left" type="continuous">
+    <parent link="base_link"/>
+    <child link="wheel_left"/>
+    <origin xyz="0 0.25 0" rpy="1.57 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+</robot>
+      `}</pre>
+      
+      <h2>🔗 Link Elements</h2>
+      
+      <p>Each link can have three components:</p>
+      
+      <h3>1. Visual</h3>
+      
+      <p>Defines appearance for visualization:</p>
+      
+      <pre>{`
+<visual>
+  <origin xyz="0 0 0.25" rpy="0 0 0"/>
+  <geometry>
+    <mesh filename="package://my_robot/meshes/body.stl" scale="0.001 0.001 0.001"/>
+  </geometry>
+  <material name="grey">
+    <color rgba="0.5 0.5 0.5 1"/>
+  </material>
+</visual>
+      `}</pre>
+      
+      <h3>2. Collision</h3>
+      
+      <p>Simplified geometry for collision detection:</p>
+      
+      <pre>{`
+<collision>
+  <geometry>
+    <box size="0.3 0.3 0.4"/>
+  </geometry>
+</collision>
+      `}</pre>
+      
+      <h3>3. Inertial</h3>
+      
+      <p>Physical properties for simulation:</p>
+      
+      <pre>{`
+<inertial>
+  <mass value="5.0"/>
+  <origin xyz="0 0 0.25"/>
+  <inertia ixx="0.167" ixy="0" ixz="0" iyy="0.167" iyz="0" izz="0.25"/>
+</inertial>
+      `}</pre>
+      
+      <h2>🔗 Joint Types</h2>
+      
+      <p>ROS supports six joint types:</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>fixed</strong></td>
+            <td>No movement</td>
+            <td>Sensors, static connections</td>
+          </tr>
+          <tr>
+            <td><strong>revolute</strong></td>
+            <td>Rotation with limits</td>
+            <td>Elbow, knee</td>
+          </tr>
+          <tr>
+            <td><strong>continuous</strong></td>
+            <td>Unlimited rotation</td>
+            <td>Wheels</td>
+          </tr>
+          <tr>
+            <td><strong>prismatic</strong></td>
+            <td>Linear motion</td>
+            <td>Elevator, telescoping arm</td>
+          </tr>
+          <tr>
+            <td><strong>floating</strong></td>
+            <td>6 DOF</td>
+            <td>Free-floating base</td>
+          </tr>
+          <tr>
+            <td><strong>planar</strong></td>
+            <td>2D plane motion</td>
+            <td>Rarely used</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h3>Revolute Joint Example</h3>
+      
+      <pre>{`
+<joint name="shoulder_pitch" type="revolute">
+  <parent link="torso"/>
+  <child link="upper_arm"/>
+  <origin xyz="0.3 0 0.5" rpy="0 0 0"/>
+  <axis xyz="0 1 0"/>
+  <limit lower="-1.57" upper="1.57" effort="100" velocity="1.0"/>
+  <dynamics damping="0.7" friction="0.0"/>
+</joint>
+      `}</pre>
+      
+      <h2>🤖 Humanoid Robot URDF Structure</h2>
+      
+      <h3>Kinematic Chain</h3>
+      
+      <pre>
+                    head
+                      |
+          shoulder_L-torso-shoulder_R
+                      |
+             hip_L--pelvis--hip_R
+                  /      \
+            knee_L        knee_R
+              |              |
+           ankle_L        ankle_R
+      </pre>
+      
+      <h3>Simplified Humanoid URDF</h3>
+      
+      <pre>{`
+<?xml version="1.0"?>
+<robot name="humanoid">
+
+  <!-- Base/Pelvis -->
+  <link name="pelvis">
+    <visual>
+      <geometry>
+        <box size="0.3 0.2 0.15"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="15"/>
+      <inertia ixx="0.5" ixy="0" ixz="0" iyy="0.4" iyz="0" izz="0.3"/>
+    </inertial>
+  </link>
+
+  <!-- Torso -->
+  <link name="torso">
+    <visual>
+      <geometry>
+        <box size="0.3 0.25 0.5"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="20"/>
+      <inertia ixx="1.0" ixy="0" ixz="0" iyy="0.8" iyz="0" izz="0.6"/>
+    </inertial>
+  </link>
+
+  <joint name="pelvis_to_torso" type="fixed">
+    <parent link="pelvis"/>
+    <child link="torso"/>
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Right Upper Leg -->
+  <link name="upper_leg_right">
+    <visual>
+      <geometry>
+        <cylinder radius="0.06" length="0.4"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="5"/>
+      <inertia ixx="0.067" ixy="0" ixz="0" iyy="0.067" iyz="0" izz="0.009"/>
+    </inertial>
+  </link>
+
+  <joint name="hip_pitch_right" type="revolute">
+    <parent link="pelvis"/>
+   <child link="upper_leg_right"/>
+    <origin xyz="0 -0.1 -0.075" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57" upper="1.57" effort="150" velocity="2.0"/>
+  </joint>
+
+  <!-- Right Lower Leg -->
+  <link name="lower_leg_right">
+    <visual>
+      <geometry>
+        <cylinder radius="0.05" length="0.4"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="knee_pitch_right" type="revolute">
+    <parent link="upper_leg_right"/>
+    <child link="lower_leg_right"/>
+    <origin xyz="0 0 -0.4" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0" upper="0" effort="150" velocity="2.0"/>
+  </joint>
+
+  <!-- Repeat for left leg, arms, head... -->
+
+</robot>
+      `}</pre>
+      
+      <h2>🛠️ Using xacro for Modularity</h2>
+      
+      <p><strong>xacro</strong> (XML Macros) makes URDF more maintainable:</p>
+      
+      <pre>{`
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="humanoid">
+
+  <!-- Define macros -->
+  <xacro:macro name="leg" params="side reflect">
+    <link name="upper_leg_\${side}">
+      <visual>
+        <geometry>
+          <cylinder radius="0.06" length="0.4"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="hip_\${side}" type="revolute">
+      <parent link="pelvis"/>
+      <child link="upper_leg_\${side}"/>
+      <origin xyz="0 \${reflect*0.1} 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-1.57" upper="1.57" effort="150" velocity="2.0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Use macros -->
+  <xacro:leg side="right" reflect="-1"/>
+  <xacro:leg side="left" reflect="1"/>
+
+</robot>
+      `}</pre>
+      
+      <p>Convert xacro to URDF:</p>
+      
+      <pre>{`
+xacro robot.xacro > robot.urdf
+      `}</pre>
+      
+      <h2>🎨 Visualizing in RViz</h2>
+      
+      <p>Launch RViz to visualize your robot:</p>
+      
+      <pre>{`
+# Run robot state publisher
+ros2 run robot_state_publisher robot_state_publisher --ros-args -p robot_description:="$(cat robot.urdf)"
+
+# Launch RViz
+ros2 run rviz2 rviz2
+      `}</pre>
+      
+      <p>In RViz:</p>
+      <ol>
+        <li>Set Fixed Frame to <code>base_link</code></li>
+        <li>Add <code>RobotModel</code> display</li>
+        <li>Adjust joint angles with Joint State Publisher</li>
+      </ol>
+      
+      <h2>🔧 Best Practices</h2>
+      
+      <ol>
+        <li><strong>Use consistent units</strong>: Meters, kilograms, seconds</li>
+        <li><strong>Proper coordinate frames</strong>: Follow REP 103 standard</li>
+        <li><strong>Collision simplified</strong>: Use simple shapes for collision</li>
+        <li><strong>Mesh optimization</strong>: Keep mesh files small</li>
+        <li><strong>Use xacro</strong>: For complex robots, always use macros</li>
+        <li><strong>Test incrementally</strong>: Build and test one limb at a time</li>
+      </ol>
+      
+      <h2>📊 Calculating Inertia</h2>
+      
+      <p>For a box:</p>
+      <pre>
+ixx = (1/12) * m * (h² + d²)
+iyy = (1/12) * m * (w² + d²)
+izz = (1/12) * m * (w² + h²)
+      </pre>
+      
+      <p>For a cylinder:</p>
+      <pre>
+ixx = iyy = (1/12) * m * (3r² + h²)
+izz = (1/2) * m * r²
+      </pre>
+      
+      <h2>🚀 Complete Module</h2>
+      
+      <p>Congratulations! You've completed Module 1. You now understand:</p>
+      
+      <p>✅ ROS 2 architecture and fundamentals</p>
+      <p>✅ Communication via topics, services, and actions</p>
+      <p>✅ Python integration with AI agents</p>
+      <p>✅ Robot description with URDF</p>
+      
+      <p>Next, explore <strong>Module 2: The Digital Twin</strong> to learn simulation with Gazebo and Unity →</p>
+    </div>
+  );
+}

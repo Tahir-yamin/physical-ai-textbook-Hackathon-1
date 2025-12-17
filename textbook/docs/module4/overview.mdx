@@ -1,0 +1,26 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Module4Overview() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ماڈیول 4: Vision-Language-Action (VLA)</h1>
+        <p>حتمی ماڈیول میں، ہم وائس ٹو ایکشن پائپ لائن بناتے ہیں۔ آپ سیکھیں گے کہ OpenAI Whisper کو تقریر کی شناخت کے لیے اور LLMs کو ارادے کے تجزیے کے لیے کیسے استعمال کیا جائے تاکہ روبوٹس کو قدرتی زبان کے ذریعے کنٹرول کیا جا سکے۔</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Module 4: Vision-Language-Action (VLA)</h1>
+      <p>In the final module, we build a Voice-to-Action pipeline. You will learn how to use OpenAI Whisper for speech recognition and LLMs for intent parsing to control robots using natural language.</p>
+    </div>
+  );
+}

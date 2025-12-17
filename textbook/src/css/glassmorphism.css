@@ -1,0 +1,102 @@
+/**
+ * Glassmorphism CSS - Modern glass effects
+ */
+
+/* Base glass effect */
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode glass */
+[data-theme='dark'] .glass {
+    background: rgba(26, 31, 58, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Glass card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2);
+}
+
+/* Dark mode glass card */
+[data-theme='dark'] .glass-card {
+    background: rgba(26, 31, 58, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme='dark'] .glass-card:hover {
+    background: rgba(26, 31, 58, 0.5);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+}
+
+/* Glass button */
+.glass-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    padding: 0.75rem 2rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.glass-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Glass navbar */
+.glass-navbar {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme='dark'] .glass-navbar {
+    background: rgba(10, 14, 39, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass modal */
+.glass-modal {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .glass-modal {
+    background: rgba(26, 31, 58, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Glass overlay */
+.glass-overlay {
+    background: rgba(10, 14, 39, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}

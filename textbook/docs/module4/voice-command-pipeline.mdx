@@ -1,0 +1,240 @@
+---
+sidebar_position: 4
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function VoiceCommandPipeline() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>وائس پائپ لائن بنانا</h1>
+        
+        <h2>🎯 مکمل تصویر</h2>
+        
+        <p>اس آخری باب میں، ہم ہر چیز کو ایک مکمل <strong>Voice-to-Action Pipeline</strong> میں جوڑیں گے۔</p>
+        
+        <pre>
+[Microphone] → [Whisper] → [Text] → [LLM] → [JSON] → [ROS 2 Controller] → [Robot]
+        </pre>
+        
+        <h2>🏗️ ROS 2 آرکیٹیکچر</h2>
+        
+        <p>ہم تین نوڈس بنائیں گے:</p>
+        
+        <ol>
+          <li><strong>AudioNode</strong>: آڈیو ریکارڈ کرتا ہے اور Whisper کو بھیجتا ہے۔</li>
+          <li><strong>BrainNode</strong>: متن وصول کرتا ہے، LLM کو کال کرتا ہے، اور ایکشنز شائع کرتا ہے۔</li>
+          <li><strong>ControlNode</strong>: ایکشنز کو انجام دیتا ہے (مثال کے طور پر، <code>/cmd_vel</code> پر شائع کرنا)۔</li>
+        </ol>
+        
+        <h2>💻 کوڈ کا نفاذ</h2>
+        
+        <h3>Brain Node</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+import json
+
+class BrainNode(Node):
+    def __init__(self):
+        super().__init__('brain_node')
+        self.sub = self.create_subscription(String, '/voice/text', self.callback, 10)
+        self.pub = self.create_publisher(String, '/robot/actions', 10)
+        
+    def callback(self, msg):
+        command = msg.data
+        self.get_logger().info(f"Thinking about: {command}")
+        
+        # Call LLM (simplified)
+        actions = parse_with_llm(command)
+        
+        # Publish actions
+        action_msg = String()
+        action_msg.data = json.dumps(actions)
+        self.pub.publish(action_msg)
+        `}</pre>
+        
+        <h3>Control Node</h3>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+import json
+
+class ControlNode(Node):
+    def __init__(self):
+        super().__init__('control_node')
+        self.sub = self.create_subscription(String, '/robot/actions', self.callback, 10)
+        self.vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        
+    def callback(self, msg):
+        actions = json.loads(msg.data)
+        
+        for action in actions['actions']:
+            if action['type'] == 'move':
+                self.move_robot(action['target'])
+            elif action['type'] == 'stop':
+                self.stop_robot()
+                
+    def move_robot(self, target):
+        # Logic to move to target
+        twist = Twist()
+        twist.linear.x = 0.5
+        self.vel_pub.publish(twist)
+        `}</pre>
+        
+        <h2>🚀 سسٹم کو چلانا</h2>
+        
+        <p>لانچ فائل کا استعمال کرتے ہوئے تمام نوڈس شروع کریں:</p>
+        
+        <pre>{`
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(package='my_bot', executable='audio_node'),
+        Node(package='my_bot', executable='brain_node'),
+        Node(package='my_bot', executable='control_node'),
+    ])
+        `}</pre>
+        
+        <h2>🎉 نتیجہ</h2>
+        
+        <p>مبارک ہو! آپ نے <strong>Physical AI & Humanoid Robotics</strong> کا نصاب مکمل کر لیا ہے۔</p>
+        
+        <p>آپ نے سیکھا:</p>
+        <ul>
+          <li>✅ ROS 2 کے بنیادی اصول</li>
+          <li>✅ Gazebo اور Unity میں نقلی</li>
+          <li>✅ NVIDIA Isaac Sim اور RL</li>
+          <li>✅ وائس کنٹرولڈ روبوٹکس</li>
+        </ul>
+        
+        <p>مستقبل روشن ہے، اور اب آپ اسے بنانے کے لیے تیار ہیں!</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Building the Voice Pipeline</h1>
+      
+      <h2>🎯 The Big Picture</h2>
+      
+      <p>In this final chapter, we will connect everything into a complete <strong>Voice-to-Action Pipeline</strong>.</p>
+      
+      <pre>
+[Microphone] → [Whisper] → [Text] → [LLM] → [JSON] → [ROS 2 Controller] → [Robot]
+      </pre>
+      
+      <h2>🏗️ ROS 2 Architecture</h2>
+      
+      <p>We will create three nodes:</p>
+      
+      <ol>
+        <li><strong>AudioNode</strong>: Records audio and sends to Whisper.</li>
+        <li><strong>BrainNode</strong>: Receives text, calls LLM, and publishes actions.</li>
+        <li><strong>ControlNode</strong>: Executes actions (e.g., publishing to <code>/cmd_vel</code>).</li>
+      </ol>
+      
+      <h2>💻 Code Implementation</h2>
+      
+      <h3>Brain Node</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+import json
+
+class BrainNode(Node):
+    def __init__(self):
+        super().__init__('brain_node')
+        self.sub = self.create_subscription(String, '/voice/text', self.callback, 10)
+        self.pub = self.create_publisher(String, '/robot/actions', 10)
+        
+    def callback(self, msg):
+        command = msg.data
+        self.get_logger().info(f"Thinking about: {command}")
+        
+        # Call LLM (simplified)
+        actions = parse_with_llm(command)
+        
+        # Publish actions
+        action_msg = String()
+        action_msg.data = json.dumps(actions)
+        self.pub.publish(action_msg)
+      `}</pre>
+      
+      <h3>Control Node</h3>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+from geometry_msgs.msg import Twist
+import json
+
+class ControlNode(Node):
+    def __init__(self):
+        super().__init__('control_node')
+        self.sub = self.create_subscription(String, '/robot/actions', self.callback, 10)
+        self.vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        
+    def callback(self, msg):
+        actions = json.loads(msg.data)
+        
+        for action in actions['actions']:
+            if action['type'] == 'move':
+                self.move_robot(action['target'])
+            elif action['type'] == 'stop':
+                self.stop_robot()
+                
+    def move_robot(self, target):
+        # Logic to move to target
+        twist = Twist()
+        twist.linear.x = 0.5
+        self.vel_pub.publish(twist)
+      `}</pre>
+      
+      <h2>🚀 Running the System</h2>
+      
+      <p>Start all nodes using a launch file:</p>
+      
+      <pre>{`
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(package='my_bot', executable='audio_node'),
+        Node(package='my_bot', executable='brain_node'),
+        Node(package='my_bot', executable='control_node'),
+    ])
+      `}</pre>
+      
+      <h2>🎉 Conclusion</h2>
+      
+      <p>Congratulations! You have completed the <strong>Physical AI & Humanoid Robotics</strong> textbook.</p>
+      
+      <p>You have learned:</p>
+      <ul>
+        <li>✅ ROS 2 Fundamentals</li>
+        <li>✅ Simulation in Gazebo and Unity</li>
+        <li>✅ NVIDIA Isaac Sim and RL</li>
+        <li>✅ Voice-Controlled Robotics</li>
+      </ul>
+      
+      <p>The future is bright, and you are now ready to build it!</p>
+    </div>
+  );
+}

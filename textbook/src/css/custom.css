@@ -1,0 +1,91 @@
+/**
+ * Custom CSS for Physical AI Textbook
+ * Futuristic design with modern color palette
+ */
+
+/* Import modern fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Import Urdu fonts - Noto Nastaliq Urdu and Gulzar */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Gulzar&display=swap');
+
+/* Import custom animations and effects */
+@import './animations.css';
+@import './glassmorphism.css';
+@import './urdu-font.css';
+
+/* Futuristic Color Palette */
+:root {
+  /* Primary - Vibrant Purple/Blue */
+  --ifm-color-primary: #667eea;
+  --ifm-color-primary-dark: #5468e6;
+  --ifm-color-primary-darker: #4a5fe4;
+  --ifm-color-primary-darkest: #3246d7;
+  --ifm-color-primary-light: #7893ed;
+  --ifm-color-primary-lighter: #889eef;
+  --ifm-color-primary-lightest: #a8b9f3;
+
+  /* Accent Colors */
+  --ifm-color-accent: #00ff88;
+  --ifm-color-accent-dark: #00dd77;
+  --ifm-color-secondary: #764ba2;
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --ifm-heading-font-weight: 800;
+  --ifm-font-weight-bold: 700;
+
+  /* Code */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-navbar-height: 70px;
+}
+
+/* Dark Mode - Enhanced */
+[data-theme='dark'] {
+  --ifm-color-primary: #889eef;
+  --ifm-color-primary-dark: #7893ed;
+  --ifm-color-primary-darker: #6a88eb;
+  --ifm-color-primary-darkest: #4a6ee4;
+  --ifm-color-primary-light: #98aaf1;
+  --ifm-color-primary-lighter: #a6b7f3;
+  --ifm-color-primary-lightest: #c4d0f7;
+
+  --ifm-background-color: #0A0E27;
+  --ifm-background-surface-color: #1a1f3a;
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Global Typography */
+body {
+  font-family: var(--ifm-font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--ifm-heading-font-weight);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Link Hover Effects */
+a {
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  text-decoration: none;
+}

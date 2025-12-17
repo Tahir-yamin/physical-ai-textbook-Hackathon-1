@@ -1,0 +1,87 @@
+{
+    "nav": {
+        "docs": "Docs",
+        "chat": "Chat",
+        "signin": "Sign In",
+        "toggleNavbar": "Toggle navigation bar",
+        "toggleSidebar": "Toggle sidebar"
+    },
+    "hero": {
+        "title": "Build robots that ",
+        "highlight": "understand",
+        "titleEnd": " the physical world.",
+        "subtitle": "Master Physical AI from browser to production. ROS 2, Isaac Sim, and Vision-Language-Action models.",
+        "free": "Free forever.",
+        "cta": {
+            "browse": "Browse Content",
+            "personalize": "Personalize Learning"
+        }
+    },
+    "sections": {
+        "journey": {
+            "title": "From Zero to Building Robots That Think",
+            "subtitle": "Each step brings you closer to creating machines that move, sense, and understand"
+        },
+        "values": {
+            "title": "Build Machines That Free Up Your Time",
+            "subtitle": "Robots that handle physical tasks while you focus on what matters most"
+        },
+        "cta": {
+            "title": "The Future is Physical AI",
+            "subtitle": "Ready to Build the Next Generation?",
+            "description": "Join thousands learning to create intelligent robots that bridge the digital and physical worlds"
+        }
+    },
+    "modules": {
+        "module1": {
+            "title": "Module 1: The Robotic Nervous System",
+            "description": "ROS 2 - the communication backbone",
+            "features": [
+                "Nodes, Topics, and Services",
+                "Python agents with rclpy",
+                "URDF for Humanoids"
+            ]
+        },
+        "module2": {
+            "title": "Module 2: The Digital Twin",
+            "description": "Gazebo & Unity for physics simulation",
+            "features": [
+                "Realistic robot simulation",
+                "Physics engines",
+                "Sensor integration"
+            ]
+        },
+        "module3": {
+            "title": "Module 3: The AI-Robot Brain",
+            "description": "NVIDIA Isaac™ Platform",
+            "features": [
+                "Photorealistic simulation",
+                "Hardware-accelerated SLAM",
+                "Autonomous navigation"
+            ]
+        },
+        "module4": {
+            "title": "Module 4: Voice-to-Action",
+            "description": "VLA - LLMs meet robotics",
+            "features": [
+                "Voice command processing",
+                "Natural language to actions",
+                "Autonomous decision making"
+            ]
+        }
+    },
+    "values": {
+        "education": {
+            "title": "Free & Accessible Education",
+            "description": "World-class robotics education available to everyone, everywhere. No paywalls, ever."
+        },
+        "practical": {
+            "title": "Hands-On & Practical",
+            "description": "Learn by building. Every concept reinforced with real code and simulations."
+        },
+        "community": {
+            "title": "Community-Driven",
+            "description": "Join a global community of robot builders, learners, and innovators."
+        }
+    }
+}

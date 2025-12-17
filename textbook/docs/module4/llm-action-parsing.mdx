@@ -1,0 +1,184 @@
+---
+sidebar_position: 3
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function LLMActionParsing() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>LLMs کے ساتھ ارادے (Intent) کو سمجھنا</h1>
+        
+        <h2>🎯 LLMs کیوں؟</h2>
+        
+        <p>روایتی چیٹ بوٹس سخت اصولوں (if/else) کا استعمال کرتے ہیں۔ <strong>Large Language Models (LLMs)</strong> جیسے GPT-4 یا Llama 3 قدرتی زبان کی باریکیوں کو سمجھ سکتے ہیں۔ روبوٹکس میں، ہم ان کا استعمال مبہم احکامات ("مجھے کچھ پانی لاؤ") کو سٹرکچرڈ ایکشنز (<code>navigate_to(kitchen), pick(water), navigate_to(user)</code>) میں تبدیل کرنے کے لیے کرتے ہیں۔</p>
+        
+        <h2>🧠 پرامپٹ انجینئرنگ (Prompt Engineering)</h2>
+        
+        <p>روبوٹ کو کنٹرول کرنے کی کلید صحیح پرامپٹ ہے:</p>
+        
+        <pre>{`
+You are a robot assistant. Your capabilities are:
+1. move(direction, distance)
+2. turn(angle)
+3. pick(object)
+4. place(location)
+
+User Command: "Go to the kitchen and grab the apple."
+
+Output JSON:
+{
+  "actions": [
+    {"type": "move", "target": "kitchen"},
+    {"type": "pick", "object": "apple"}
+  ]
+}
+        `}</pre>
+        
+        <h2>💻 Python انضمام</h2>
+        
+        <p>OpenAI API کا استعمال کرتے ہوئے:</p>
+        
+        <pre>{`
+import openai
+import json
+
+def parse_command(command):
+    prompt = f"""
+    You are a robot. Convert this command to JSON actions:
+    Command: "{command}"
+    """
+    
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    
+    return json.loads(response.choices[0].message.content)
+        `}</pre>
+        
+        <h2>🔗 LangChain کا استعمال</h2>
+        
+        <p>پیچیدہ ورک فلو کے لیے، <strong>LangChain</strong> بہترین ہے:</p>
+        
+        <pre>{`
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(temperature=0)
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a robot controller. Output JSON."),
+    ("human", "{command}")
+])
+
+chain = prompt | llm
+result = chain.invoke({"command": "Turn around and stop"})
+        `}</pre>
+        
+        <h2>🛡️ حفاظت اور توثیق</h2>
+        
+        <p>LLMs غلطیاں کر سکتے ہیں۔ عمل کرنے سے پہلے ہمیشہ آؤٹ پٹ کی توثیق کریں:</p>
+        
+        <ul>
+          <li><strong>JSON Schema Validation</strong>: یقینی بنائیں کہ آؤٹ پٹ متوقع فارمیٹ سے میل کھاتا ہے۔</li>
+          <li><strong>Safety Limits</strong>: رفتار اور ٹارک کی حدود کو چیک کریں۔</li>
+          <li><strong>Human in the Loop</strong>: خطرناک کارروائیوں کے لیے صارف سے تصدیق طلب کریں۔</li>
+        </ul>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب ہمارے پاس "کان" (Whisper) اور "دماغ" (LLM) ہیں۔ اگلا، <strong>مکمل پائپ لائن</strong> بنائیں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Understanding Intent with LLMs</h1>
+      
+      <h2>🎯 Why LLMs?</h2>
+      
+      <p>Traditional chatbots use rigid rules (if/else). <strong>Large Language Models (LLMs)</strong> like GPT-4 or Llama 3 can understand natural language nuances. In robotics, we use them to convert vague commands ("Get me some water") into structured actions (<code>navigate_to(kitchen), pick(water), navigate_to(user)</code>).</p>
+      
+      <h2>🧠 Prompt Engineering</h2>
+      
+      <p>The key to controlling robots is the right prompt:</p>
+      
+      <pre>{`
+You are a robot assistant. Your capabilities are:
+1. move(direction, distance)
+2. turn(angle)
+3. pick(object)
+4. place(location)
+
+User Command: "Go to the kitchen and grab the apple."
+
+Output JSON:
+{
+  "actions": [
+    {"type": "move", "target": "kitchen"},
+    {"type": "pick", "object": "apple"}
+  ]
+}
+      `}</pre>
+      
+      <h2>💻 Python Integration</h2>
+      
+      <p>Using OpenAI API:</p>
+      
+      <pre>{`
+import openai
+import json
+
+def parse_command(command):
+    prompt = f"""
+    You are a robot. Convert this command to JSON actions:
+    Command: "{command}"
+    """
+    
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    
+    return json.loads(response.choices[0].message.content)
+      `}</pre>
+      
+      <h2>🔗 Using LangChain</h2>
+      
+      <p>For complex workflows, <strong>LangChain</strong> is excellent:</p>
+      
+      <pre>{`
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+
+llm = ChatOpenAI(temperature=0)
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a robot controller. Output JSON."),
+    ("human", "{command}")
+])
+
+chain = prompt | llm
+result = chain.invoke({"command": "Turn around and stop"})
+      `}</pre>
+      
+      <h2>🛡️ Safety and Validation</h2>
+      
+      <p>LLMs can make mistakes. Always validate output before execution:</p>
+      
+      <ul>
+        <li><strong>JSON Schema Validation</strong>: Ensure output matches expected format.</li>
+        <li><strong>Safety Limits</strong>: Check speed and torque limits.</li>
+        <li><strong>Human in the Loop</strong>: Ask for confirmation for dangerous actions.</li>
+      </ul>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now we have "Ears" (Whisper) and "Brain" (LLM). Next, let's build the <strong>Complete Pipeline</strong> →</p>
+    </div>
+  );
+}

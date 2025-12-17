@@ -1,0 +1,26 @@
+---
+sidebar_position: 1
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Module2Overview() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ماڈیول 2: ڈیجیٹل ٹوئن (Gazebo اور Unity)</h1>
+        <p>اس ماڈیول میں، ہم روبوٹکس شبیہ سازی کی دنیا میں غوطہ لگاتے ہیں۔ آپ سیکھیں گے کہ Gazebo اور Unity کا استعمال کرتے ہوئے حقیقت پسندانہ ماحول کیسے بنایا جائے، سینسرز کی نقل کیسے کی جائے، اور ہارڈویئر پر جانے سے پہلے اپنے کوڈ کی جانچ کیسے کی جائے۔</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Module 2: The Digital Twin (Gazebo & Unity)</h1>
+      <p>In this module, we dive into the world of robotics simulation. You will learn how to create realistic environments using Gazebo and Unity, simulate sensors, and test your code before moving to hardware.</p>
+    </div>
+  );
+}

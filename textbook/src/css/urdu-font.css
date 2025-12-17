@@ -1,0 +1,48 @@
+/* Urdu Language Specific Styles - Gulzar Font */
+html[lang="ur"],
+html[lang="ur"] body,
+html[lang="ur"] h1,
+html[lang="ur"] h2,
+html[lang="ur"] h3,
+html[lang="ur"] h4,
+html[lang="ur"] p,
+html[lang="ur"] span,
+html[lang="ur"] a,
+html[lang="ur"] button,
+html[lang="ur"] .hero__title,
+html[lang="ur"] .hero__subtitle {
+    font-family: 'Gulzar', 'Noto Nastaliq Urdu', serif !important;
+    font-weight: 400;
+    line-height: 1.8;
+    /* Increased line height for Urdu script */
+    letter-spacing: 0.02em;
+}
+
+/* Adjust heading weights for Gulzar */
+html[lang="ur"] h1,
+html[lang="ur"] h2 {
+    font-weight: 400;
+    /* Gulzar only has one weight */
+    line-height: 1.6;
+}
+
+/* Better text rendering for Urdu */
+html[lang="ur"] {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* RTL adjustments for better Urdu display */
+html[dir="rtl"] {
+    text-align: right;
+}
+
+html[dir="rtl"] .navbar__items {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .navbar__item {
+    margin-right: 0;
+    margin-left: 1rem;
+}

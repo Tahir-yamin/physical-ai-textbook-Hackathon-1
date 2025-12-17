@@ -1,0 +1,552 @@
+---
+sidebar_position: 2
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function ROS2Fundamentals() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>ROS 2 بنیادی باتیں</h1>
+        
+        <h2>🎯 ROS 2 کا تعارف</h2>
+        
+        <p>ROS 2 (Robot Operating System 2) روایتی معنوں میں آپریٹنگ سسٹم نہیں ہے—یہ ایک <strong>مڈل ویئر فریم ورک</strong> ہے جو روبوٹکس میں تقسیم شدہ کمپیوٹنگ کے لیے خدمات فراہم کرتا ہے۔ یہ اصل ROS کا ارتقاء ہے، جسے حقیقی وقت، سیکیورٹی، اور ملٹی روبوٹ صلاحیتوں کے ساتھ پروڈکشن ماحول کے لیے دوبارہ ڈیزائن کیا گیا ہے۔</p>
+        
+        <h2>🏗️ ROS 2 فن تعمیر</h2>
+        
+        <h3>تین تہوں والا فن تعمیر</h3>
+        
+        <p>ROS 2 تین تہوں والے فن تعمیر کی پیروی کرتا ہے:</p>
+        
+        <pre>
+┌─────────────────────────────────┐
+│   Application Layer             │
+│   (Your Nodes: Navigation, AI)  │
+├─────────────────────────────────┤
+│   ROS 2 Client Library Layer    │
+│   (rclcpp, rclpy)               │
+├─────────────────────────────────┤
+│   DDS Layer (Communication)     │
+│   (Fast DDS, Cyclone DDS)       │
+└─────────────────────────────────┘
+        </pre>
+        
+        <ol>
+          <li><strong>ایپلیکیشن لیئر</strong>: کنٹرول، ادراک، منصوبہ بندی کے لیے آپ کے حسب ضرورت نوڈز</li>
+          <li><strong>کلائنٹ لائبریری</strong>: زبان کے لیے مخصوص APIs (C++ کے لیے rclcpp، Python کے لیے rclpy)</li>
+          <li><strong>DDS لیئر</strong>: حقیقی وقت کے مواصلات کے لیے ڈیٹا ڈسٹری بیوشن سروس</li>
+        </ol>
+        
+        <h3>DDS: مواصلاتی ریڑھ کی ہڈی</h3>
+        
+        <p>ROS 1 کے حسب ضرورت TCPROS پروٹوکول کے برعکس، ROS 2 <strong>DDS (Data Distribution Service)</strong> کا استعمال کرتا ہے، جو ایک انڈسٹری اسٹینڈرڈ مڈل ویئر ہے جو فراہم کرتا ہے:</p>
+        
+        <ul>
+          <li><strong>سروس کا معیار (QoS)</strong>: وشوسنییتا، استحکام، اور تاخیر کو ترتیب دیں</li>
+          <li><strong>دریافت</strong>: مرکزی ماسٹر کے بغیر خودکار پیر کی دریافت</li>
+          <li><strong>سیکیورٹی</strong>: بلٹ ان توثیق اور خفیہ کاری</li>
+          <li><strong>حقیقی وقت</strong>: اہم سسٹمز کے لیے فیصلہ کن مواصلات</li>
+        </ul>
+        
+        <h2>🛠️ اپنا ROS 2 ماحول ترتیب دینا</h2>
+        
+        <h3>تنصیب (Ubuntu 22.04)</h3>
+        
+        <pre>{`
+# Set up sources
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+# Add ROS 2 repository
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+sudo apt update && sudo apt install curl
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Install ROS 2 Humble (LTS)
+sudo apt update
+sudo apt install ros-humble-desktop
+        `}</pre>
+        
+        <h3>ماحول کی ترتیب</h3>
+        
+        <pre>{`
+# Source ROS 2 (add to ~/.bashrc for persistence)
+source /opt/ros/humble/setup.bash
+
+# Verify installation
+ros2 --version
+
+# Install build tools
+sudo apt install python3-colcon-common-extensions
+        `}</pre>
+        
+        <h2>📦 ورک اسپیس اور پیکجز</h2>
+        
+        <h3>ورک اسپیس بنانا</h3>
+        
+        <pre>{`
+# Create workspace directory
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws
+
+# Build the workspace
+colcon build
+
+# Source the workspace
+source install/setup.bash
+        `}</pre>
+        
+        <h3>پیکج کی ساخت</h3>
+        
+        <p>ایک عام ROS 2 پیکج میں شامل ہیں:</p>
+        
+        <pre>{`
+my_robot_package/
+├── package.xml          # Package metadata
+├── setup.py            # Python package setup
+├── my_robot_package/   # Python source code
+│   ├── __init__.py
+│   └── my_node.py
+├── launch/             # Launch files
+│   └── my_launch.py
+├── config/             # Configuration files
+│   └── params.yaml
+└── urdf/              # Robot descriptions
+    └── robot.urdf
+        `}</pre>
+        
+        <h2>🎛️ بنیادی تصورات</h2>
+        
+        <h3>1. نوڈز (Nodes)</h3>
+        
+        <p><strong>نوڈز</strong> ROS 2 میں بنیادی کمپیوٹنگ یونٹس ہیں۔ ہر نوڈ کو ایک واحد، اچھی طرح سے بیان کردہ کام انجام دینا چاہیے:</p>
+        
+        <ul>
+          <li><code>camera_node</code>: کیمرے سے تصاویر کھینچتا ہے</li>
+          <li><code>object_detector</code>: اشیاء کا پتہ لگانے کے لیے تصاویر پر کارروائی کرتا ہے</li>
+          <li><code>motor_controller</code>: روبوٹ موٹرز کو کنٹرول کرتا ہے</li>
+          <li><code>path_planner</code>: نیویگیشن کے راستوں کی منصوبہ بندی کرتا ہے</li>
+        </ul>
+        
+        <h3>2. کمپیوٹیشنل گراف</h3>
+        
+        <p>نوڈز ایک <strong>کمپیوٹیشنل گراف</strong> بنانے کے لیے بات چیت کرتے ہیں:</p>
+        
+        <pre>{`
+[Camera Node] --image--> [Object Detector] --objects--> [Decision Maker]
+                                                              |
+                                                              v
+                                                     [Motor Controller]
+        `}</pre>
+        
+        <h3>3. دریافت کا طریقہ کار</h3>
+        
+        <p>ROS 2 خودکار پیر کی تلاش کے لیے <strong>DDS Discovery</strong> کا استعمال کرتا ہے:</p>
+        
+        <ul>
+          <li>کوئی مرکزی ماسٹر نہیں (ROS 1 کے برعکس)</li>
+          <li>نوڈز خود بخود ایک دوسرے کو دریافت کرتے ہیں</li>
+          <li>نیٹ ورک کی تبدیلیوں کے لیے لچکدار</li>
+          <li>ملٹی روبوٹ سسٹمز کی حمایت کرتا ہے</li>
+        </ul>
+        
+        <h2>🔧 بلڈ سسٹم: Colcon</h2>
+        
+        <p>ROS 2 اپنے بلڈ ٹول کے طور پر <strong>colcon</strong> کا استعمال کرتا ہے:</p>
+        
+        <pre>{`
+# Build all packages
+colcon build
+
+# Build specific package
+colcon build --packages-select my_package
+
+# Build with symlink install (for Python development)
+colcon build --symlink-install
+        `}</pre>
+        
+        <h2>📝 پیکج مینی فیسٹ (package.xml)</h2>
+        
+        <p>ہر پیکج کو ایک <code>package.xml</code> فائل کی ضرورت ہوتی ہے:</p>
+        
+        <pre>{`
+<?xml version="1.0"?>
+<package format="3">
+  <name>my_robot_package</name>
+  <version>1.0.0</version>
+  <description>My robot control package</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+        `}</pre>
+        
+        <h2>🎯 سروس کا معیار (QoS)</h2>
+        
+        <p>QoS پروفائلز مواصلاتی رویے کو کنٹرول کرتے ہیں:</p>
+        
+        <pre>{`
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+
+# Best effort (fast, may lose messages)
+qos_profile = QoSProfile(
+    reliability=ReliabilityPolicy.BEST_EFFORT,
+    depth=10
+)
+
+# Reliable (guaranteed delivery)
+qos_profile = QoSProfile(
+    reliability=ReliabilityPolicy.RELIABLE,
+    depth=10
+)
+        `}</pre>
+        
+        <h2>💡 ROS 2 بمقابلہ ROS 1</h2>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>خصوصیت</th>
+              <th>ROS 1</th>
+              <th>ROS 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ماسٹر</strong></td>
+              <td>ضروری (ناکامی کا واحد نقطہ)</td>
+              <td>کوئی ماسٹر نہیں (تقسیم شدہ)</td>
+            </tr>
+            <tr>
+              <td><strong>حقیقی وقت</strong></td>
+              <td>سپورٹ نہیں ہے</td>
+              <td>سپورٹ ہے</td>
+            </tr>
+            <tr>
+              <td><strong>سیکیورٹی</strong></td>
+              <td>کوئی بلٹ ان سیکیورٹی نہیں</td>
+              <td>DDS سیکیورٹی</td>
+            </tr>
+            <tr>
+              <td><strong>ملٹی روبوٹ</strong></td>
+              <td>پیچیدہ</td>
+              <td>مقامی سپورٹ</td>
+            </tr>
+            <tr>
+              <td><strong>مواصلات</strong></td>
+              <td>TCPROS</td>
+              <td>DDS</td>
+            </tr>
+            <tr>
+              <td><strong>Python</strong></td>
+              <td>Python 2/3</td>
+              <td>صرف Python 3</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h2>🚀 آپ کی پہلی ROS 2 کمانڈ</h2>
+        
+        <p>اپنی تنصیب کی جانچ کریں:</p>
+        
+        <pre>{`
+# Run the talker demo
+ros2 run demo_nodes_cpp talker
+
+# In another terminal, run the listener
+ros2 run demo_nodes_cpp listener
+        `}</pre>
+        
+        <p>آپ کو ٹاکر پیغامات شائع کرتے ہوئے اور سننے والے کو انہیں وصول کرتے ہوئے دیکھنا چاہئے!</p>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ آپ بنیادی باتیں سمجھ چکے ہیں، آئیے یہ جاننے کے لیے <strong>نوڈز، ٹاپکس اور سروسز</strong> میں غوطہ لگائیں کہ ROS 2 کے اجزاء کیسے بات چیت کرتے ہیں →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>ROS 2 Fundamentals</h1>
+      
+      <h2>🎯 Introduction to ROS 2</h2>
+      
+      <p>ROS 2 (Robot Operating System 2) is not an operating system in the traditional sense—it's a <strong>middleware framework</strong> that provides services for distributed computing in robotics. It's the evolution of the original ROS, redesigned for production environments with real-time, security, and multi-robot capabilities.</p>
+      
+      <h2>🏗️ ROS 2 Architecture</h2>
+      
+      <h3>The Three-Layer Architecture</h3>
+      
+      <p>ROS 2 follows a three-layer architecture:</p>
+      
+      <pre>
+┌─────────────────────────────────┐
+│   Application Layer             │
+│   (Your Nodes: Navigation, AI)  │
+├─────────────────────────────────┤
+│   ROS 2 Client Library Layer    │
+│   (rclcpp, rclpy)               │
+├─────────────────────────────────┤
+│   DDS Layer (Communication)     │
+│   (Fast DDS, Cyclone DDS)       │
+└─────────────────────────────────┘
+      </pre>
+      
+      <ol>
+        <li><strong>Application Layer</strong>: Your custom nodes for control, perception, planning</li>
+        <li><strong>Client Library</strong>: Language-specific APIs (rclcpp for C++, rclpy for Python)</li>
+        <li><strong>DDS Layer</strong>: Data Distribution Service for real-time communication</li>
+      </ol>
+      
+      <h3>DDS: The Communication Backbone</h3>
+      
+      <p>Unlike ROS 1's custom TCPROS protocol, ROS 2  uses <strong>DDS (Data Distribution Service)</strong>, an industry-standard middleware that provides:</p>
+      
+      <ul>
+        <li><strong>Quality of Service (QoS)</strong>: Configure reliability, durability, and latency</li>
+        <li><strong>Discovery</strong>: Automatic peer discovery without a central master</li>
+        <li><strong>Security</strong>: Built-in authentication and encryption</li>
+        <li><strong>Real-time</strong>: Deterministic communication for critical systems</li>
+      </ul>
+      
+      <h2>🛠️ Setting Up Your ROS 2 Environment</h2>
+      
+      <h3>Installation (Ubuntu 22.04)</h3>
+      
+      <pre>{`
+# Set up sources
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+
+# Add ROS 2 repository
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+sudo apt update && sudo apt install curl
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Install ROS 2 Humble (LTS)
+sudo apt update
+sudo apt install ros-humble-desktop
+      `}</pre>
+      
+      <h3>Environment Setup</h3>
+      
+      <pre>{`
+# Source ROS 2 (add to ~/.bashrc for persistence)
+source /opt/ros/humble/setup.bash
+
+# Verify installation
+ros2 --version
+
+# Install build tools
+sudo apt install python3-colcon-common-extensions
+      `}</pre>
+      
+      <h2>📦 Workspaces and Packages</h2>
+      
+      <h3>Creating a Workspace</h3>
+      
+      <pre>{`
+# Create workspace directory
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws
+
+# Build the workspace
+colcon build
+
+# Source the workspace
+source install/setup.bash
+      `}</pre>
+      
+      <h3>Package Structure</h3>
+      
+      <p>A typical ROS 2 package includes:</p>
+      
+      <pre>{`
+my_robot_package/
+├── package.xml          # Package metadata
+├── setup.py            # Python package setup
+├── my_robot_package/   # Python source code
+│   ├── __init__.py
+│   └── my_node.py
+├── launch/             # Launch files
+│   └── my_launch.py
+├── config/             # Configuration files
+│   └── params.yaml
+└── urdf/              # Robot descriptions
+    └── robot.urdf
+      `}</pre>
+      
+      <h2>🎛️ Core Concepts</h2>
+      
+      <h3>1. Nodes</h3>
+      
+      <p><strong>Nodes</strong> are the fundamental computing units in ROS 2. Each node should perform a single, well-defined task:</p>
+      
+      <ul>
+        <li><code>camera_node</code>: Captures images from a camera</li>
+        <li><code>object_detector</code>: Processes images to detect objects</li>
+        <li><code>motor_controller</code>: Controls robot motors</li>
+        <li><code>path_planner</code>: Plans navigation paths</li>
+      </ul>
+      
+      <h3>2. Computational Graph</h3>
+      
+      <p>Nodes communicate to form a <strong>computational graph</strong>:</p>
+      
+      <pre>{`
+[Camera Node] --image--> [Object Detector] --objects--> [Decision Maker]
+                                                              |
+                                                              v
+                                                     [Motor Controller]
+      `}</pre>
+      
+      <h3>3. Discovery Mechanism</h3>
+      
+      <p>ROS 2 uses <strong>DDS Discovery</strong> for automatic peer finding:</p>
+      
+      <ul>
+        <li>No central master (unlike ROS 1)</li>
+        <li>Nodes automatically discover each other</li>
+        <li>Resilient  to network changes</li>
+        <li>Supports multi-robot systems</li>
+      </ul>
+      
+      <h2>🔧 Build System: Colcon</h2>
+      
+      <p>ROS 2 uses <strong>colcon</strong> as its build tool:</p>
+      
+      <pre>{`
+# Build all packages
+colcon build
+
+# Build specific package
+colcon build --packages-select my_package
+
+# Build with symlink install (for Python development)
+colcon build --symlink-install
+      `}</pre>
+      
+      <h2>📝 Package Manifest (package.xml)</h2>
+      
+      <p>Every package needs a `package.xml` file:</p>
+      
+      <pre>{`
+<?xml version="1.0"?>
+<package format="3">
+  <name>my_robot_package</name>
+  <version>1.0.0</version>
+  <description>My robot control package</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+      `}</pre>
+      
+      <h2>🎯 Quality of Service (QoS)</h2>
+      
+      <p>QoS profiles control communication behavior:</p>
+      
+      <pre>{`
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+
+# Best effort (fast, may lose messages)
+qos_profile = QoSProfile(
+    reliability=ReliabilityPolicy.BEST_EFFORT,
+    depth=10
+)
+
+# Reliable (guaranteed delivery)
+qos_profile = QoSProfile(
+    reliability=ReliabilityPolicy.RELIABLE,
+    depth=10
+)
+      `}</pre>
+      
+      <h2>💡 ROS 2 vs ROS 1</h2>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>ROS 1</th>
+            <th>ROS 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Master</strong></td>
+            <td>Required (single point of failure)</td>
+            <td>No master (distributed)</td>
+          </tr>
+          <tr>
+            <td><strong>Real-time</strong></td>
+            <td>Not supported</td>
+            <td>Supported</td>
+          </tr>
+          <tr>
+            <td><strong>Security</strong></td>
+            <td>No built-in security</td>
+            <td>DDS Security</td>
+          </tr>
+          <tr>
+            <td><strong>Multi-robot</strong></td>
+            <td>Complex</td>
+            <td>Native support</td>
+          </tr>
+          <tr>
+            <td><strong>Communication</strong></td>
+            <td>TCPROS</td>
+            <td>DDS</td>
+          </tr>
+          <tr>
+            <td><strong>Python</strong></td>
+            <td>Python 2/3</td>
+            <td>Python 3 only</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h2>🚀 Your First ROS 2 Command</h2>
+      
+      <p>Test your installation:</p>
+      
+      <pre>{`
+# Run the talker demo
+ros2 run demo_nodes_cpp talker
+
+# In another terminal, run the listener
+ros2 run demo_nodes_cpp listener
+      `}</pre>
+      
+      <p>You should see the talker  publishing messages and the listener receiving them!</p>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that you understand the fundamentals, let's dive into <strong>Nodes, Topics, and Services</strong> to learn how ROS 2 components communicate →</p>
+    </div>
+  );
+}

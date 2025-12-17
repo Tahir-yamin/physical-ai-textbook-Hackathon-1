@@ -1,0 +1,216 @@
+---
+sidebar_position: 2
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function WhisperIntegration() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>Whisper کے ساتھ تقریر کی شناخت (Speech Recognition)</h1>
+        
+        <h2>🎯 OpenAI Whisper کیا ہے؟</h2>
+        
+        <p><strong>Whisper</strong> ایک جدید ترین تقریر کی شناخت کا ماڈل ہے جو OpenAI کے ذریعہ تیار کیا گیا ہے۔ یہ انتہائی درست ہے، متعدد زبانوں (بشمول اردو!) کو سپورٹ کرتا ہے، اور شور والے ماحول میں مضبوط ہے۔ روبوٹکس کے لیے، یہ ہمیں روبوٹس کو زبانی احکامات دینے کی اجازت دیتا ہے۔</p>
+        
+        <h2>💻 تنصیب</h2>
+        
+        <p>ہم تیز رفتار کارکردگی کے لیے <code>faster-whisper</code> لائبریری استعمال کریں گے:</p>
+        
+        <pre>{`
+pip install faster-whisper sounddevice numpy
+sudo apt install libportaudio2
+        `}</pre>
+        
+        <h2>🎤 آڈیو ریکارڈنگ</h2>
+        
+        <p>سب سے پہلے، ہمیں مائیکروفون سے آڈیو کیپچر کرنے کی ضرورت ہے:</p>
+        
+        <pre>{`
+import sounddevice as sd
+import numpy as np
+
+def record_audio(duration=5, fs=16000):
+    print("Recording...")
+    recording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
+    sd.wait()
+    print("Finished recording")
+    return recording.flatten()
+        `}</pre>
+        
+        <h2>🧠 ٹرانسکرپشن (Transcription)</h2>
+        
+        <p>اب، آڈیو کو متن میں تبدیل کرنے کے لیے Whisper کا استعمال کریں:</p>
+        
+        <pre>{`
+from faster_whisper import WhisperModel
+
+# Load model (tiny, base, small, medium, large)
+model = WhisperModel("small", device="cpu", compute_type="int8")
+
+def transcribe(audio_data):
+    segments, info = model.transcribe(audio_data, beam_size=5)
+    
+    full_text = ""
+    for segment in segments:
+        full_text += segment.text + " "
+        
+    return full_text.strip()
+        `}</pre>
+        
+        <h2>🤖 ROS 2 نوڈ</h2>
+        
+        <p>آئیے اسے ROS 2 نوڈ میں لپیٹتے ہیں جو متن کو شائع کرتا ہے:</p>
+        
+        <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class SpeechToTextNode(Node):
+    def __init__(self):
+        super().__init__('speech_to_text')
+        self.publisher = self.create_publisher(String, '/voice/text', 10)
+        self.timer = self.create_timer(1.0, self.listen_and_publish)
+        self.model = WhisperModel("small", device="cpu", compute_type="int8")
+
+    def listen_and_publish(self):
+        # Record and transcribe (simplified)
+        audio = record_audio()
+        text = transcribe(audio)
+        
+        if text:
+            msg = String()
+            msg.data = text
+            self.publisher.publish(msg)
+            self.get_logger().info(f'Published: "{text}"')
+
+def main():
+    rclpy.init()
+    node = SpeechToTextNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+        `}</pre>
+        
+        <h2>🌍 کثیر لسانی سپورٹ</h2>
+        
+        <p>Whisper خود بخود زبان کا پتہ لگا سکتا ہے۔ اردو کے لیے، آپ اسے مجبور کر سکتے ہیں:</p>
+        
+        <pre>{`
+segments, info = model.transcribe(audio, language="ur")
+        `}</pre>
+        
+        <h2>📚 اگلے اقدامات</h2>
+        
+        <p>اب جب کہ روبوٹ سن سکتا ہے، آئیے دیکھتے ہیں کہ وہ <strong>LLMs</strong> کا استعمال کرتے ہوئے کیسے سمجھ سکتا ہے →</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Speech Recognition with Whisper</h1>
+      
+      <h2>🎯 What is OpenAI Whisper?</h2>
+      
+      <p><strong>Whisper</strong> is a state-of-the-art speech recognition model developed by OpenAI. It is highly accurate, supports multiple languages (including Urdu!), and is robust to noise. For robotics, it allows us to give verbal commands to robots.</p>
+      
+      <h2>💻 Installation</h2>
+      
+      <p>We will use the <code>faster-whisper</code> library for better performance:</p>
+      
+      <pre>{`
+pip install faster-whisper sounddevice numpy
+sudo apt install libportaudio2
+      `}</pre>
+      
+      <h2>🎤 Recording Audio</h2>
+      
+      <p>First, we need to capture audio from the microphone:</p>
+      
+      <pre>{`
+import sounddevice as sd
+import numpy as np
+
+def record_audio(duration=5, fs=16000):
+    print("Recording...")
+    recording = sd.rec(int(duration * fs), samplerate=fs, channels=1)
+    sd.wait()
+    print("Finished recording")
+    return recording.flatten()
+      `}</pre>
+      
+      <h2>🧠 Transcription</h2>
+      
+      <p>Now, use Whisper to convert audio to text:</p>
+      
+      <pre>{`
+from faster_whisper import WhisperModel
+
+# Load model (tiny, base, small, medium, large)
+model = WhisperModel("small", device="cpu", compute_type="int8")
+
+def transcribe(audio_data):
+    segments, info = model.transcribe(audio_data, beam_size=5)
+    
+    full_text = ""
+    for segment in segments:
+        full_text += segment.text + " "
+        
+    return full_text.strip()
+      `}</pre>
+      
+      <h2>🤖 ROS 2 Node</h2>
+      
+      <p>Let's wrap this into a ROS 2 node that publishes the text:</p>
+      
+      <pre>{`
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class SpeechToTextNode(Node):
+    def __init__(self):
+        super().__init__('speech_to_text')
+        self.publisher = self.create_publisher(String, '/voice/text', 10)
+        self.timer = self.create_timer(1.0, self.listen_and_publish)
+        self.model = WhisperModel("small", device="cpu", compute_type="int8")
+
+    def listen_and_publish(self):
+        # Record and transcribe (simplified)
+        audio = record_audio()
+        text = transcribe(audio)
+        
+        if text:
+            msg = String()
+            msg.data = text
+            self.publisher.publish(msg)
+            self.get_logger().info(f'Published: "{text}"')
+
+def main():
+    rclpy.init()
+    node = SpeechToTextNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+      `}</pre>
+      
+      <h2>🌍 Multilingual Support</h2>
+      
+      <p>Whisper can automatically detect language. For Urdu, you can force it:</p>
+      
+      <pre>{`
+segments, info = model.transcribe(audio, language="ur")
+      `}</pre>
+      
+      <h2>📚 Next Steps</h2>
+      
+      <p>Now that the robot can hear, let's see how it can understand using <strong>LLMs</strong> →</p>
+    </div>
+  );
+}

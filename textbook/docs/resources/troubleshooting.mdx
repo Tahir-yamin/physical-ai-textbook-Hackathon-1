@@ -1,0 +1,120 @@
+---
+sidebar_position: 3
+---
+
+import {useTranslation} from 'react-i18next';
+
+export default function Troubleshooting() {
+  const {i18n} = useTranslation();
+  const isUrdu = i18n.language === 'ur';
+  
+  if (isUrdu) {
+    return (
+      <div>
+        <h1>خرابیوں کا سراغ لگانا (Troubleshooting)</h1>
+        
+        <h2>❓ ROS 2 کمانڈ نہیں ملی</h2>
+        
+        <p><strong>مسئلہ</strong>: <code>ros2: command not found</code></p>
+        <p><strong>حل</strong>: آپ نے اپنی ورک اسپیس کو سورس نہیں کیا ہے۔ چلائیں:</p>
+        <pre>source /opt/ros/humble/setup.bash</pre>
+        
+        <h2>❓ پیکیج نہیں ملا</h2>
+        
+        <p><strong>مسئلہ</strong>: <code>Package 'my_package' not found</code></p>
+        <p><strong>حل</strong>: یقینی بنائیں کہ آپ نے اپنی ورک اسپیس بنائی ہے اور اسے سورس کیا ہے:</p>
+        <pre>{`
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+        `}</pre>
+        
+        <h2>❓ نوڈ کریش ہو رہا ہے</h2>
+        
+        <p><strong>مسئلہ</strong>: نوڈ شروع ہوتا ہے اور فوراً مر جاتا ہے۔</p>
+        <p><strong>حل</strong>: لاگز چیک کریں:</p>
+        <pre>ros2 run my_package my_node --ros-args --log-level debug</pre>
+        <p>عام وجوہات: درآمد کی غلطیاں، لاپتہ انحصار، یا غلط پیرامیٹرز۔</p>
+        
+        <h2>❓ ٹاپک ڈیٹا نہیں دکھا رہا</h2>
+        
+        <p><strong>مسئلہ</strong>: <code>ros2 topic echo /topic</code> کچھ نہیں دکھاتا ہے۔</p>
+        <p><strong>حل</strong>:</p>
+        <ol>
+          <li>چیک کریں کہ کیا پبلشر چل رہا ہے: <code>ros2 node list</code></li>
+          <li>چیک کریں کہ کیا ٹاپک موجود ہے: <code>ros2 topic list</code></li>
+          <li>QoS کی ترتیبات چیک کریں۔ اگر پبلشر "Best Effort" ہے اور سبسکرائبر "Reliable" ہے، تو وہ جڑ نہیں پائیں گے۔</li>
+        </ol>
+        
+        <h2>❓ Gazebo لوڈ نہیں ہو رہا</h2>
+        
+        <p><strong>مسئلہ</strong>: Gazebo کالی اسکرین پر لٹکا ہوا ہے۔</p>
+        <p><strong>حل</strong>:</p>
+        <ol>
+          <li>پہلی بار چلانے میں ماڈل ڈاؤن لوڈ کرنے میں وقت لگ سکتا ہے۔ انتظار کریں۔</li>
+          <li><code>gzserver</code> اور <code>gzclient</code> کو مارنے کی کوشش کریں: <code>killall -9 gzserver gzclient</code></li>
+          <li>اپنے گرافکس ڈرائیورز کو اپ ڈیٹ کریں۔</li>
+        </ol>
+        
+        <h2>❓ Python درآمد کی خرابی۔</h2>
+        
+        <p><strong>مسئلہ</strong>: <code>ModuleNotFoundError: No module named 'rclpy'</code></p>
+        <p><strong>حل</strong>: آپ غلط Python ماحول استعمال کر رہے ہیں۔ یقینی بنائیں کہ آپ سسٹم Python یا ورچوئل ماحول استعمال کر رہے ہیں جس میں ROS 2 پیکجز تک رسائی ہے۔</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div>
+      <h1>Troubleshooting Guide</h1>
+      
+      <h2>❓ ROS 2 Command Not Found</h2>
+      
+      <p><strong>Issue</strong>: <code>ros2: command not found</code></p>
+      <p><strong>Solution</strong>: You haven't sourced your workspace. Run:</p>
+      <pre>source /opt/ros/humble/setup.bash</pre>
+      
+      <h2>❓ Package Not Found</h2>
+      
+      <p><strong>Issue</strong>: <code>Package 'my_package' not found</code></p>
+      <p><strong>Solution</strong>: Ensure you have built your workspace and sourced it:</p>
+      <pre>{`
+cd ~/ros2_ws
+colcon build
+source install/setup.bash
+      `}</pre>
+      
+      <h2>❓ Node Crashing</h2>
+      
+      <p><strong>Issue</strong>: Node starts and immediately dies.</p>
+      <p><strong>Solution</strong>: Check the logs:</p>
+      <pre>ros2 run my_package my_node --ros-args --log-level debug</pre>
+      <p>Common causes: Import errors, missing dependencies, or incorrect parameters.</p>
+      
+      <h2>❓ Topic Not Showing Data</h2>
+      
+      <p><strong>Issue</strong>: <code>ros2 topic echo /topic</code> shows nothing.</p>
+      <p><strong>Solution</strong>:</p>
+      <ol>
+        <li>Check if publisher is running: <code>ros2 node list</code></li>
+        <li>Check if topic exists: <code>ros2 topic list</code></li>
+        <li>Check QoS settings. If publisher is "Best Effort" and subscriber is "Reliable", they won't connect.</li>
+      </ol>
+      
+      <h2>❓ Gazebo Not Loading</h2>
+      
+      <p><strong>Issue</strong>: Gazebo hangs on black screen.</p>
+      <p><strong>Solution</strong>:</p>
+      <ol>
+        <li>First run might take time to download models. Wait.</li>
+        <li>Try killing <code>gzserver</code> and <code>gzclient</code>: <code>killall -9 gzserver gzclient</code></li>
+        <li>Update your graphics drivers.</li>
+      </ol>
+      
+      <h2>❓ Python Import Error</h2>
+      
+      <p><strong>Issue</strong>: <code>ModuleNotFoundError: No module named 'rclpy'</code></p>
+      <p><strong>Solution</strong>: You are using the wrong Python environment. Ensure you are using the system Python or a virtual environment with access to ROS 2 packages.</p>
+    </div>
+  );
+}
