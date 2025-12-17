@@ -46,10 +46,6 @@ const config: Config = {
   // Client-side i18n will be handled by react-i18next instead
   // Removed Docusaurus i18n config to avoid routing conflicts
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'your-username', // Usually your GitHub org/user name.
-  projectName: 'physical-ai-robotics-textbook', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
