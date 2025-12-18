@@ -5,7 +5,6 @@ import { useLocation } from '@docusaurus/router';
 
 export default function NavbarLanguageSwitcher() {
     const [mounted, setMounted] = useState(false);
-    const [forceUpdate, setForceUpdate] = useState(0);
     const location = useLocation();
 
     useEffect(() => {
@@ -36,13 +35,9 @@ export default function NavbarLanguageSwitcher() {
             return document.getElementById('custom-language-switcher') !== null;
         };
 
-        // Aggressive injection attempts
+        // Simple injection - NO setState calls
         const inject = () => {
-            const success = injectLanguageSwitcher();
-            if (success) {
-                setForceUpdate(prev => prev + 1);
-            }
-            return success;
+            return injectLanguageSwitcher();
         };
 
         // Immediate attempts
@@ -108,7 +103,7 @@ export default function NavbarLanguageSwitcher() {
             window.removeEventListener('hashchange', handleNavigation);
             window.removeEventListener('storage', handleStorage);
         };
-    }, [location.pathname, forceUpdate]);
+    }, [location.pathname]); // FIXED: Only location.pathname dependency
 
     if (!mounted || !ExecutionEnvironment.canUseDOM) return null;
 

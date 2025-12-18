@@ -1,7 +1,8 @@
 # Physical AI & Humanoid Robotics Textbook
 
 > 🏆 **Hackathon Submission**: Panaversity Hackathon I - Physical AI & Humanoid Robotics  
-> 🎯 **Score**: 300/300 Points (100% Complete)
+> 🎯 **Score**: 300/300 Points (100% Complete)  
+> 🎥 **Demo Video**: [Watch on YouTube](https://youtu.be/w3C4r8zrxVQ)
 
 A comprehensive, AI-powered, bilingual (English/Urdu) textbook platform for teaching Physical AI and Humanoid Robotics, featuring an integrated RAG chatbot for interactive learning.
 

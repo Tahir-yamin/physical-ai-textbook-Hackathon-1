@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AuthModal.module.css';
 
 interface AuthModalProps {
@@ -18,6 +18,18 @@ export default function AuthModal({ onClose, onAuthSuccess, initialMode = 'signu
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Clear form fields when switching between signin/signup
+    useEffect(() => {
+        setFormData({
+            email: '',
+            password: '',
+            name: '',
+            software_background: 'intermediate',
+            hardware_background: 'beginner'
+        });
+        setError('');
+    }, [isSignup]);
 
     // Browser-safe backend URL configuration
     const getBackendUrl = () => {

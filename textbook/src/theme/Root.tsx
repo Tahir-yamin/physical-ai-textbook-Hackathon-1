@@ -45,7 +45,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
         if (ExecutionEnvironment.canUseDOM) {
             localStorage.removeItem('user');
             // Redirect to homepage on logout
-            window.location.href = '/physical-ai-textbook/';
+            window.location.href = '/physical-ai-textbook-Hackathon-1/';
         }
     };
 
@@ -80,7 +80,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 <AuthModal
                     onClose={() => {
                         // Redirect to homepage when closing modal on protected route
-                        window.location.href = '/physical-ai-textbook/';
+                        window.location.href = '/physical-ai-textbook-Hackathon-1/';
                     }}
                     onAuthSuccess={handleAuthSuccess}
                     initialMode="signin"
